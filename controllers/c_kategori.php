@@ -1,0 +1,26 @@
+<?php
+include_once '../models/m_kategori.php';
+
+$kategori = new kategori();
+
+$aksi = $_GET['aksi'];
+
+if ($aksi == "tambah") {
+
+    $nama_kategori = $_POST['nama_kategori'];
+    $kategori->tambah_kategori($nama_kategori);
+
+} elseif ($aksi == "edit") {
+
+    $id = $_POST['id'];
+    $nama_kategori = $_POST['nama_kategori'];
+    $kategori->ubah_kategori($id, $nama_kategori);
+
+} elseif ($aksi == "hapus") {
+
+    $id = $_GET['id'];
+    $kategori->hapus_kategori($id);
+
+} else {
+    echo "Aksi tidak ditemukan";
+}
