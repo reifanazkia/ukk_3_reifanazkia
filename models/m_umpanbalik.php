@@ -1,60 +1,59 @@
 <?php
-include_once 'm_koneksi.php';
+include_once __DIR__ . '/m_koneksi.php';
 
 class umpanbalik
 {
+    // =========================
+    // TAMPIL ASPIRASI + STATUS
+    // =========================
+    public function tampil_data()
+    {
+        $conn = new koneksi();
 
-  // MENAMPILKAN SEMUA ASPIRASI + CEK SUDAH DIBALAS / BELUM
-  public function tampil_data()
-  {
-    $conn = new koneksi();
+        $sql = "SELECT *
+                FROM aspirasi
+                ORDER BY created_at DESC";
 
-    $sql = "SELECT
-              aspirasi.id AS aspirasi_id,
-              aspirasi.nama_lengkap,
-              aspirasi.kelas,
-              aspirasi.judul,
-              aspirasi.pesan,
-              umpan_balik.id AS umpan_id,
-              umpan_balik.tanggapan,
-              umpan_balik.created
-            FROM aspirasi
-            LEFT JOIN umpan_balik
-              ON umpan_balik.aspirasi_id = aspirasi.id
-            ORDER BY aspirasi.created_at DESC";
-
-    $query = mysqli_query($conn->koneksi, $sql);
-    $hasil = [];
-
-    while ($row = mysqli_fetch_object($query)) {
-      $hasil[] = $row;
+        return mysqli_query($conn->koneksi, $sql);
     }
 
-    return $hasil;
-  }
+    // =========================
+    // RIWAYAT UMPAN BALIK
+    // =========================
+    public function riwayat($aspirasi_id)
+    {
+        $conn = new koneksi();
 
-  public function tambah_data($aspirasi_id, $tanggapan)
-  {
-    $conn = new koneksi();
-    $sql = "INSERT INTO umpan_balik (aspirasi_id, tanggapan)
-            VALUES ('$aspirasi_id', '$tanggapan')";
-    mysqli_query($conn->koneksi, $sql);
-    header("Location: ../views/admin/umpanbalik.php");
-  }
+        $sql = "SELECT *
+                FROM umpan_balik
+                WHERE aspirasi_id = '$aspirasi_id'
+                ORDER BY created_at ASC";
 
-  public function edit_data($id, $tanggapan)
-  {
-    $conn = new koneksi();
-    $sql = "UPDATE umpan_balik SET tanggapan='$tanggapan' WHERE id='$id'";
-    mysqli_query($conn->koneksi, $sql);
-    header("Location: ../views/admin/umpanbalik.php");
-  }
+        return mysqli_query($conn->koneksi, $sql);
+    }
 
-  public function hapus_data($id)
-  {
-    $conn = new koneksi();
-    $sql = "DELETE FROM umpan_balik WHERE id='$id'";
-    mysqli_query($conn->koneksi, $sql);
-    header("Location: ../views/admin/umpanbalik.php");
-  }
+    // =========================
+    // TAMBAH UMPAN BALIK (INSERT TERUS)
+    // =========================
+    public function tambah($aspirasi_id, $tanggapan)
+    {
+        $conn = new koneksi();
+
+        $sql = "INSERT INTO umpan_balik (aspirasi_id, tanggapan)
+                VALUES ('$aspirasi_id', '$tanggapan')";
+
+        $query = mysqli_query($conn->koneksi, $sql);
+
+        // update status aspirasi
+        if ($query) {
+            mysqli_query(
+                $conn->koneksi,
+                "UPDATE aspirasi
+                 SET status = 'diproses'
+                 WHERE id = '$aspirasi_id'"
+            );
+        }
+
+        return $query;
+    }
 }

@@ -4,13 +4,101 @@ include '../layout/header.php';
 include '../layout/sidebar.php';
 
 $data_aspirasi = $aspirasi->tampil_data();
-$kategori = $aspirasi->tampil_data(); // pastikan fungsi ini ada
+$kategori = $aspirasi->tampil_data(); // pastikan ini menampilkan kategori
 ?>
+
+<!-- ================= STYLE ================= -->
+<style>
+/* Modal overlay */
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 999;
+}
+
+/* Modal box */
+.modal-content {
+    background: #fff;
+    width: 450px;
+    margin: 100px auto;
+    padding: 20px;
+    border-radius: 8px;
+    position: relative;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+/* Close button */
+.close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+/* Form group */
+.form-group {
+    margin-bottom: 15px;
+}
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+}
+.form-group input,
+.form-group textarea,
+.form-group select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+textarea {
+    resize: vertical;
+    height: 80px;
+}
+
+/* Buttons */
+.btn-submit {
+    background: #28a745;
+    color: #fff;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.btn-primary {
+    background: #007bff;
+    color: #fff;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+.btn-edit {
+    background: #ffc107;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 4px;
+    text-decoration: none;
+    margin-right: 5px;
+}
+.btn-hapus {
+    background: #dc3545;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 4px;
+    text-decoration: none;
+}
+</style>
 
 <h2>Data Aspirasi Siswa</h2>
 <br>
 
-<button onclick="openTambah()">+ Tambah Aspirasi</button>
+<button onclick="openTambah()" class="btn-primary">+ Tambah Aspirasi</button>
 <br><br>
 
 <table class="table-aspirasi">
@@ -34,7 +122,7 @@ $kategori = $aspirasi->tampil_data(); // pastikan fungsi ini ada
   <td><?= $row->nama_kategori ?></td>
   <td><?= $row->judul ?></td>
   <td><?= $row->pesan ?></td>
-  <td><?= $row->status ?></td>
+  <td><?= ucfirst($row->status) ?></td>
   <td>
     <a href="#" onclick="openEdit(
       '<?= $row->id ?>',
@@ -43,10 +131,10 @@ $kategori = $aspirasi->tampil_data(); // pastikan fungsi ini ada
       '<?= $row->id_categori ?>',
       '<?= $row->judul ?>',
       '<?= $row->pesan ?>'
-    )">Edit</a>
+    )" class="btn-edit">Edit</a>
 
     <a href="../../controllers/c_aspirasi.php?aksi=hapus&id=<?= $row->id ?>"
-       onclick="return confirm('Yakin hapus data ini?')">Hapus</a>
+       onclick="return confirm('Yakin hapus data ini?')" class="btn-hapus">Hapus</a>
   </td>
 </tr>
 <?php endforeach; ?>
@@ -64,20 +152,37 @@ $kategori = $aspirasi->tampil_data(); // pastikan fungsi ini ada
     <h3>Tambah Aspirasi</h3>
 
     <form action="../../controllers/c_aspirasi.php?aksi=tambah" method="post">
-      <input type="text" name="nama_lengkap" placeholder="Nama Lengkap" required>
-      <input type="text" name="kelas" placeholder="Kelas" required>
+      <div class="form-group">
+        <label>Nama Lengkap</label>
+        <input type="text" name="nama_lengkap" placeholder="Nama Lengkap" required>
+      </div>
 
-      <select name="id_categori" required>
-        <option value="">-- Pilih Kategori --</option>
-        <?php foreach ($kategori as $k) : ?>
-          <option value="<?= $k->id ?>"><?= $k->id ?></option>
-        <?php endforeach; ?>
-      </select>
+      <div class="form-group">
+        <label>Kelas</label>
+        <input type="text" name="kelas" placeholder="Kelas" required>
+      </div>
 
-      <input type="text" name="judul" placeholder="Judul" required>
-      <textarea name="pesan" placeholder="Pesan" required></textarea>
+      <div class="form-group">
+        <label>Kategori</label>
+        <select name="id_categori" required>
+          <option value="">-- Pilih Kategori --</option>
+          <?php foreach ($kategori as $k) : ?>
+            <option value="<?= $k->id ?>"><?= $k->nama_kategori ?></option>
+          <?php endforeach; ?>
+        </select>
+      </div>
 
-      <button type="submit">Simpan</button>
+      <div class="form-group">
+        <label>Judul</label>
+        <input type="text" name="judul" placeholder="Judul" required>
+      </div>
+
+      <div class="form-group">
+        <label>Pesan</label>
+        <textarea name="pesan" placeholder="Tulis pesan..." required></textarea>
+      </div>
+
+      <button type="submit" class="btn-submit">Simpan</button>
     </form>
   </div>
 </div>
@@ -88,45 +193,63 @@ $kategori = $aspirasi->tampil_data(); // pastikan fungsi ini ada
     <span class="close" onclick="closeEdit()">&times;</span>
     <h3>Edit Aspirasi</h3>
 
-    <form action="../../controllers/c_aspirasi.php?aksi=edit" method="post">
+    <form action="../../controllers/c_aspirasi.php?aksi=update" method="post">
       <input type="hidden" name="id" id="edit_id">
 
-      <input type="text" name="nama_lengkap" id="edit_nama" required>
-      <input type="text" name="kelas" id="edit_kelas" required>
+      <div class="form-group">
+        <label>Nama Lengkap</label>
+        <input type="text" name="nama_lengkap" id="edit_nama" required>
+      </div>
 
-      <select name="id_categori" id="edit_kategori" required>
-        <?php foreach ($kategori as $k) : ?>
-          <option value="<?= $k->id ?>"><?= $k->id ?></option>
-        <?php endforeach; ?>
-      </select>
+      <div class="form-group">
+        <label>Kelas</label>
+        <input type="text" name="kelas" id="edit_kelas" required>
+      </div>
 
-      <input type="text" name="judul" id="edit_judul" required>
-      <textarea name="pesan" id="edit_pesan" required></textarea>
+      <div class="form-group">
+        <label>Kategori</label>
+        <select name="id_categori" id="edit_kategori" required>
+          <?php foreach ($kategori as $k) : ?>
+            <option value="<?= $k->id ?>"><?= $k->nama_kategori ?></option>
+          <?php endforeach; ?>
+        </select>
+      </div>
 
-      <button type="submit">Update</button>
+      <div class="form-group">
+        <label>Judul</label>
+        <input type="text" name="judul" id="edit_judul" required>
+      </div>
+
+      <div class="form-group">
+        <label>Pesan</label>
+        <textarea name="pesan" id="edit_pesan" required></textarea>
+      </div>
+
+      <button type="submit" class="btn-submit">Update</button>
     </form>
   </div>
 </div>
 
-<script>
-function openTambah() {
-  document.getElementById('modalTambah').style.display = 'block';
-}
-function closeTambah() {
-  document.getElementById('modalTambah').style.display = 'none';
-}
 
-function openEdit(id, nama, kelas, kategori, judul, pesan) {
-  document.getElementById('modalEdit').style.display = 'block';
-  document.getElementById('edit_id').value = id;
-  document.getElementById('edit_nama').value = nama;
-  document.getElementById('edit_kelas').value = kelas;
-  document.getElementById('edit_kategori').value = kategori;
-  document.getElementById('edit_judul').value = judul;
-  document.getElementById('edit_pesan').value = pesan;
+
+<script>
+function openTambah() { 
+    document.getElementById('modalTambah').style.display = 'block'; 
 }
-function closeEdit() {
-  document.getElementById('modalEdit').style.display = 'none';
+function closeTambah() { 
+    document.getElementById('modalTambah').style.display = 'none'; 
+}
+function openEdit(id, nama, kelas, kategori, judul, pesan) {
+    document.getElementById('modalEdit').style.display = 'block';
+    document.getElementById('edit_id').value = id;
+    document.getElementById('edit_nama').value = nama;
+    document.getElementById('edit_kelas').value = kelas;
+    document.getElementById('edit_kategori').value = kategori;
+    document.getElementById('edit_judul').value = judul;
+    document.getElementById('edit_pesan').value = pesan;
+}
+function closeEdit() { 
+    document.getElementById('modalEdit').style.display = 'none'; 
 }
 </script>
 

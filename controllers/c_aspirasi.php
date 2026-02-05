@@ -2,6 +2,7 @@
 include_once __DIR__ . '/../models/m_aspirasi.php';
 $aspirasi = new aspirasi();
 
+
 try {
     $aksi = $_GET['aksi'] ?? '';
 
@@ -31,7 +32,7 @@ try {
 
     } elseif ($aksi == 'hapus') {
         $id = $_GET['id'];
-        $aspirasi->hapus_data($id);
+        $aspirasi->hapus($id);
         
     } else {
         $data_aspirasi = $aspirasi->tampil_data();
