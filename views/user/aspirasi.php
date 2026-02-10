@@ -1,10 +1,11 @@
 <?php
 include_once '../../controllers/c_aspirasi.php';
+include_once '../../controllers/c_kategori.php';
 include '../layout/header.php';
 include '../layout/sidebar.php';
 
 $data_aspirasi = $aspirasi->tampil_data();
-$kategori = $aspirasi->tampil_data(); // pastikan ini menampilkan kategori
+$kategori = $kategori->tampil_data(); // pastikan ini menampilkan kategori
 ?>
 
 <!-- ================= STYLE ================= -->
@@ -133,8 +134,6 @@ textarea {
       '<?= $row->pesan ?>'
     )" class="btn-edit">Edit</a>
 
-    <a href="../../controllers/c_aspirasi.php?aksi=hapus&id=<?= $row->id ?>"
-       onclick="return confirm('Yakin hapus data ini?')" class="btn-hapus">Hapus</a>
   </td>
 </tr>
 <?php endforeach; ?>

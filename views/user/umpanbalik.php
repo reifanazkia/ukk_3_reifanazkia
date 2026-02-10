@@ -1,184 +1,132 @@
 <?php
-include_once __DIR__ . '../../../controllers/c_umpanbalik.php';
+session_start();
+include_once __DIR__ . '/../../controllers/c_umpanbalik.php';
 include '../layout/header.php';
 include '../layout/sidebar.php';
 
-$data_umpanbalik = $umpanbalik->tampil_data();
+// ambil data aspirasi MILIK SISWA LOGIN
+$user_id = $_SESSION['data']['id'];
+$data    = $umpanbalik->tampil_data($user_id);
 ?>
 
-<h2>Umpan Balik Aspirasi</h2>
-<p style="color:#666">Klik ikon 👁️ untuk melihat tanggapan admin</p>
-
-<div class="card-wrapper">
-<?php if (!empty($data_umpanbalik)) : ?>
-<?php foreach ($data_umpanbalik as $row) : ?>
-  <div class="card-aspirasi">
-
-    <div class="card-header">
-      <div>
-        <strong><?= $row->judul ?></strong>
-        <span class="kelas"><?= $row->kelas ?></span>
-      </div>
-
-      <div class="aksi">
-        <button class="icon-btn"
-          title="Lihat Umpan Balik"
-          onclick="openLihat(
-            '<?= htmlspecialchars($row->nama_lengkap) ?>',
-            '<?= htmlspecialchars($row->kelas) ?>',
-            '<?= htmlspecialchars($row->judul) ?>',
-            `<?= htmlspecialchars($row->pesan) ?>`,
-            `<?= htmlspecialchars($row->tanggapan) ?>`
-          )">👁️</button>
-      </div>
-    </div>
-
-    <p class="pesan"><?= $row->pesan ?></p>
-
-    <div class="status">
-      Status:
-      <?php if ($row->tanggapan) : ?>
-        <span class="badge done">Sudah Dibalas</span>
-      <?php else : ?>
-        <span class="badge wait">Belum Dibalas</span>
-      <?php endif; ?>
-    </div>
-
-  </div>
-<?php endforeach; ?>
-<?php else : ?>
-  <p>Tidak ada data aspirasi</p>
-<?php endif; ?>
-</div>
-
-<!-- ============ MODAL LIHAT ============ -->
-<div id="modalLihat" class="modal">
-  <div class="modal-box">
-    <h3>Detail Aspirasi</h3>
-
-    <div class="detail">
-      <p><strong>Nama:</strong> <span id="d_nama"></span></p>
-      <p><strong>Kelas:</strong> <span id="d_kelas"></span></p>
-
-      <p><strong>Judul Aspirasi:</strong></p>
-      <div id="d_judul" class="box"></div>
-
-      <p><strong>Isi Aspirasi:</strong></p>
-      <div id="d_pesan" class="box"></div>
-
-      <p><strong>Tanggapan Admin:</strong></p>
-      <div id="d_tanggapan" class="box"></div>
-    </div>
-
-    <div class="modal-aksi">
-      <button onclick="closeModal()">Tutup</button>
-    </div>
-  </div>
-</div>
-
-<!-- ================= STYLE ================= -->
 <style>
-.card-wrapper{
-  display:flex;
-  flex-direction:column;
-  gap:16px;
-  margin-top:20px;
-}
-.card-aspirasi{
-  background:#fff;
-  border-radius:10px;
-  padding:16px;
-  box-shadow:0 2px 6px rgba(0,0,0,.08);
-}
-.card-header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-}
-.kelas{
-  font-size:12px;
-  background:#eee;
-  padding:2px 8px;
-  border-radius:20px;
-  margin-left:6px;
-}
-.icon-btn{
-  border:none;
-  background:#f3f3f3;
-  padding:6px 12px;
-  border-radius:6px;
-  cursor:pointer;
-}
-.icon-btn:hover{
-  background:#ddd;
-}
-.pesan{
-  color:#555;
-  font-size:14px;
-  margin-top:6px;
-}
-.status{
-  margin-top:10px;
-}
-.badge{
-  padding:4px 10px;
-  border-radius:20px;
-  font-size:12px;
-}
-.badge.done{
-  background:#d4edda;
-  color:#155724;
-}
-.badge.wait{
-  background:#fff3cd;
-  color:#856404;
+.card-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 20px;
 }
 
-/* MODAL */
-.modal{
-  display:none;
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.5);
-  z-index:999;
+.card-aspirasi {
+  background: #fff;
+  border-radius: 12px;
+  padding: 18px;
+  box-shadow: 0 3px 8px rgba(0,0,0,.08);
 }
-.modal-box{
-  background:#fff;
-  width:520px;
-  margin:80px auto;
-  padding:20px;
-  border-radius:10px;
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
-.detail .box{
-  background:#f6f6f6;
-  padding:10px;
-  border-radius:6px;
-  margin-bottom:8px;
-  white-space:pre-wrap;
+
+.status {
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 14px;
 }
-.modal-aksi{
-  text-align:right;
+
+.status.baru { background:#e0e0e0; }
+.status.diproses { background:#ffe08a; }
+.status.selesai { background:#b7f5c4; }
+
+h4 { margin: 12px 0 6px; }
+.pesan { font-size:14px; color:#555; }
+
+.riwayat {
+  margin-top: 14px;
+  padding-top: 10px;
+  border-top: 1px dashed #ddd;
 }
-.modal-aksi button{
-  padding:8px 14px;
+
+.riwayat-list {
+  margin-top: 8px;
+  padding-left: 20px;
+}
+
+.riwayat-list li {
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.waktu {
+  font-size: 11px;
+  color: #888;
+  margin-left: 6px;
 }
 </style>
 
-<!-- ================= SCRIPT ================= -->
-<script>
-function openLihat(nama, kelas, judul, pesan, tanggapan){
-  document.getElementById('modalLihat').style.display = 'block';
+<h2>Umpan Balik Aspirasi Saya</h2>
+<p style="color:#666">Aspirasi yang pernah saya kirim & tanggapan admin</p>
 
-  document.getElementById('d_nama').innerText = nama;
-  document.getElementById('d_kelas').innerText = kelas;
-  document.getElementById('d_judul').innerText = judul;
-  document.getElementById('d_pesan').innerText = pesan;
-  document.getElementById('d_tanggapan').innerHTML =
-    tanggapan ? tanggapan : '<i>Belum ada umpan balik dari admin</i>';
-}
-function closeModal(){
-  document.getElementById('modalLihat').style.display = 'none';
-}
-</script>
+<div class="card-wrapper">
+
+<?php if ($data && mysqli_num_rows($data) > 0): ?>
+<?php while ($row = mysqli_fetch_object($data)) : ?>
+
+<div class="card-aspirasi">
+
+  <!-- HEADER -->
+  <div class="card-header">
+    <strong><?= htmlspecialchars($row->judul) ?></strong>
+
+    <!-- STATUS DARI ADMIN -->
+    <span class="status <?= $row->status ?>">
+      <?= ucfirst($row->status) ?>
+    </span>
+  </div>
+
+  <!-- PESAN ASPIRASI -->
+  <p class="pesan"><?= htmlspecialchars($row->pesan) ?></p>
+
+  <!-- INFO BALASAN (DARI MODEL: jumlah_balasan) -->
+  <p style="font-size:13px;color:#777">
+    <?= $row->jumlah_balasan > 0
+        ? 'Admin sudah memberikan tanggapan'
+        : 'Menunggu tanggapan admin'; ?>
+  </p>
+
+  <!-- RIWAYAT BALASAN -->
+  <div class="riwayat">
+    <strong>Umpan Balik Admin (<?= $row->jumlah_balasan ?>)</strong>
+
+    <?php if ($row->jumlah_balasan == 0): ?>
+      <p><i>Belum ada tanggapan</i></p>
+    <?php else: ?>
+      <?php
+        // detail balasan tetap ambil dari riwayat()
+        $riwayat = $umpanbalik->riwayat($row->id);
+      ?>
+      <ul class="riwayat-list">
+        <?php while ($r = mysqli_fetch_object($riwayat)) : ?>
+          <li>
+            <?= htmlspecialchars($r->tanggapan) ?>
+            <span class="waktu">
+              (<?= date('d M Y H:i', strtotime($r->created_at)) ?>)
+            </span>
+          </li>
+        <?php endwhile; ?>
+      </ul>
+    <?php endif; ?>
+  </div>
+
+</div>
+
+<?php endwhile; ?>
+<?php else: ?>
+<p>Tidak ada aspirasi yang pernah dikirim</p>
+<?php endif; ?>
+
+</div>
 
 <?php include '../layout/footer.php'; ?>

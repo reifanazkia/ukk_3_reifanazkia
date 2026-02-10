@@ -47,7 +47,7 @@ class aspirasi
         $sql  = "INSERT INTO aspirasi (nama_lengkap, kelas, id_categori, judul, pesan, status) 
                  VALUES ('$nama_lengkap', '$kelas', '$id_categori', '$judul', '$pesan', 'menunggu')";
         $query = mysqli_query($conn->koneksi, $sql);
-        $this->alert_redirect($query, "Data berhasil dikirim", "../views/admin/aspirasi.php");
+        $this->alert_redirect($query, "Data berhasil dikirim", "../views/user/aspirasi.php");
     }
 
     public function edit_data($id, $nama_lengkap, $kelas, $id_categori, $judul, $pesan)
@@ -55,7 +55,7 @@ class aspirasi
         $conn = new koneksi();
         $sql  = "UPDATE aspirasi SET nama_lengkap='$nama_lengkap', kelas='$kelas', id_categori='$id_categori', judul='$judul', pesan='$pesan' WHERE id='$id'";
         $query = mysqli_query($conn->koneksi, $sql);
-        $this->alert_redirect($query, "Data berhasil diubah", "../views/admin/aspirasi.php");
+        $this->alert_redirect($query, "Data berhasil diubah", "../views/user/aspirasi.php");
     }
 
     public function edit_status_admin($id, $status)
