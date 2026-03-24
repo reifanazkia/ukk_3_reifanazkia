@@ -1,9 +1,8 @@
 <?php
 session_start();
-
 if (!isset($_SESSION['data']) || $_SESSION['data']['role'] !== 'admin') {
-  header("Location: ../index.php");
-  exit;
+    header("Location: ../index.php");
+    exit;
 }
 
 include_once __DIR__ . '/../../controllers/c_umpanbalik.php';
@@ -14,317 +13,253 @@ $data = $umpanbalik->tampil_data();
 ?>
 
 <style>
-.card-wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  margin-top: 20px;
-}
+    /* ================= GLOBAL & LAYOUT ================= */
+    .page-title { margin-bottom: 5px; color: #111827; font-weight: 700; }
+    .page-subtitle { color: #6b7280; font-size: 14px; margin-bottom: 25px; }
+    
+    .card-wrapper {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
 
-.card-aspirasi {
-  background: #fff;
-  border-radius: 14px;
-  padding: 20px;
-  box-shadow: 0 6px 18px rgba(0,0,0,.06);
-  transition: .2s;
-}
+    /* ================= CARD DESIGN ================= */
+    .card-aspirasi {
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 24px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
 
-.card-aspirasi:hover {
-  transform: translateY(-3px);
-}
+    .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid #f3f4f6;
+    }
 
-.card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
+    .user-info { display: flex; align-items: center; gap: 10px; }
+    .user-name { font-weight: 700; color: #1f2937; font-size: 15px; }
+    
+    .badge-kelas {
+        font-size: 11px;
+        background: #eff6ff;
+        color: #2563eb;
+        padding: 2px 10px;
+        border-radius: 6px;
+        font-weight: 600;
+    }
 
-.kelas {
-  font-size: 12px;
-  background: #f3f4f6;
-  padding: 4px 10px;
-  border-radius: 20px;
-  margin-left: 6px;
-}
+    /* ================= STATUS BADGES ================= */
+    .status-pill {
+        font-size: 11px;
+        font-weight: 700;
+        padding: 4px 12px;
+        border-radius: 20px;
+        text-transform: uppercase;
+    }
+    .status-pill.menunggu { background: #f3f4f6; color: #6b7280; }
+    .status-pill.diproses { background: #fef3c7; color: #92400e; }
+    .status-pill.selesai  { background: #d1fae5; color: #065f46; }
+    .status-pill.ditolak  { background: #fee2e2; color: #991b1b; }
 
-.status {
-  font-size: 12px;
-  padding: 4px 10px;
-  border-radius: 14px;
-  margin-left: 8px;
-  font-weight: 500;
-}
+    /* ================= CONTENT ================= */
+    .judul-aspirasi { font-size: 17px; font-weight: 700; margin-bottom: 8px; color: #111827; }
+    .isi-aspirasi { font-size: 14px; color: #4b5563; line-height: 1.6; margin-bottom: 20px; }
 
-.status.baru { background:#e5e7eb; }
-.status.diproses { background:#e5e7eb; }
-.status.selesai { background:#d1d5db; }
+    /* ================= TANGGAPAN SECTION ================= */
+    .riwayat-section {
+        background: #f8fafc;
+        border-radius: 10px;
+        padding: 15px;
+        border: 1px solid #e2e8f0;
+    }
+    .riwayat-title {
+        font-size: 12px;
+        font-weight: 800;
+        color: #64748b;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .riwayat-list { list-style: none; padding: 0; margin: 0; }
+    .riwayat-item {
+        font-size: 13.5px;
+        padding: 8px 0;
+        border-bottom: 1px solid #e2e8f0;
+        color: #334155;
+    }
+    .riwayat-item:last-child { border-bottom: none; }
+    .timestamp { font-size: 11px; color: #94a3b8; float: right; }
 
-/* TOMBOL ABU MODERN */
-.icon-btn {
-  border: none;
-  background: #4b5563;
-  padding: 8px 12px;
-  border-radius: 8px;
-  cursor: pointer;
-  color: white;
-  transition: all .2s ease;
-}
+    /* ================= BUTTONS ================= */
+    .btn-balas {
+        background: #2563eb;
+        color: white;
+        border: none;
+        padding: 8px 18px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 13px;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+    .btn-balas:hover { background: #1d4ed8; }
 
-.icon-btn:hover {
-  background: #374151;
-  transform: scale(1.05);
-}
+    /* ================= MODAL REFINED ================= */
+    .modal { 
+        display: none; 
+        position: fixed; 
+        inset: 0; 
+        background: rgba(0,0,0,0.6); 
+        z-index: 9999; 
+        backdrop-filter: blur(2px);
+    }
+    .modal-content {
+        background: white;
+        width: 95%;
+        max-width: 550px;
+        margin: 40px auto;
+        padding: 0;
+        border-radius: 16px;
+        overflow: hidden;
+        animation: slideDown 0.3s ease-out;
+    }
+    @keyframes slideDown {
+        from { transform: translateY(-20px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
+    .modal-header { padding: 20px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; }
+    .modal-body { padding: 20px; }
+    .modal-footer { padding: 15px 20px; background: #f8fafc; text-align: right; border-top: 1px solid #e2e8f0; }
+    
+    .ref-box {
+        background: #f1f5f9;
+        padding: 12px;
+        border-radius: 8px;
+        margin-bottom: 15px;
+        font-size: 13px;
+        border-left: 4px solid #cbd5e1;
+    }
+    .ref-label { font-weight: 700; color: #475569; display: block; margin-bottom: 4px; font-size: 11px; text-transform: uppercase; }
 
-.icon-btn svg {
-  width: 18px;
-  height: 18px;
-}
-
-h4 { margin: 12px 0 6px; }
-.pesan { font-size:14px; color:#555; }
-
-.riwayat {
-  margin-top: 14px;
-  padding-top: 10px;
-  border-top: 1px dashed #ddd;
-}
-
-.riwayat-list {
-  margin-top: 8px;
-  padding-left: 20px;
-}
-
-.riwayat-list li {
-  margin-bottom: 8px;
-  font-size: 14px;
-}
-
-.waktu {
-  font-size: 11px;
-  color: #888;
-  margin-left: 6px;
-}
-
-/* ================= MODAL ================= */
-
-.modal {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,.4); /* TANPA BLUR */
-  z-index: 999;
-}
-
-.modal-box {
-  background: #fff;
-  width: 550px;
-  margin: 70px auto;
-  padding: 25px;
-  border-radius: 14px;
-  box-shadow: 0 15px 30px rgba(0,0,0,.15);
-  animation: fadeIn .2s ease-in-out;
-}
-
-@keyframes fadeIn {
-  from { transform: translateY(-10px); opacity:0 }
-  to { transform: translateY(0); opacity:1 }
-}
-
-.modal-box h3 {
-  margin-bottom: 15px;
-}
-
-.detail p {
-  margin-bottom: 6px;
-  font-size: 14px;
-}
-
-.detail .box {
-  background:#f3f4f6;
-  padding:12px;
-  border-radius:8px;
-  margin-bottom:12px;
-  font-size:14px;
-}
-
-textarea {
-  width:100%;
-  min-height:130px;
-  padding:12px;
-  border-radius:8px;
-  border:1px solid #d1d5db;
-  resize:none;
-  font-family:inherit;
-  font-size:14px;
-  transition:.2s;
-}
-
-textarea:focus {
-  outline:none;
-  border:1px solid #4b5563;
-  box-shadow:0 0 0 2px rgba(75,85,99,.2);
-}
-
-.modal-aksi {
-  margin-top:18px;
-  text-align:right;
-}
-
-.modal-aksi button {
-  padding:8px 16px;
-  border:none;
-  border-radius:8px;
-  cursor:pointer;
-  font-size:14px;
-  transition:.2s;
-}
-
-.modal-aksi button[type="submit"] {
-  background:#2563eb;
-  color:white;
-}
-
-.modal-aksi button[type="submit"]:hover {
-  background:#1d4ed8;
-}
-
-.modal-aksi button[type="button"] {
-  background:#e5e7eb;
-  margin-left:8px;
-}
-
-.modal-aksi button[type="button"]:hover {
-  background:#d1d5db;
-}
+    textarea.input-tanggapan {
+        width: 100%;
+        border: 1px solid #cbd5e1;
+        border-radius: 10px;
+        padding: 12px;
+        min-height: 130px;
+        font-family: inherit;
+        font-size: 14px;
+        transition: border 0.2s;
+    }
+    textarea.input-tanggapan:focus { outline: none; border-color: #2563eb; ring: 2px solid #dbeafe; }
 </style>
 
-<h2>Umpan Balik Aspirasi</h2>
-<p style="color:#666">Admin dapat mengirim lebih dari satu tanggapan</p>
+<h2 class="page-title">Umpan Balik Aspirasi</h2>
+<p class="page-subtitle">Berikan tanggapan resmi Anda untuk setiap aspirasi siswa.</p>
 
 <div class="card-wrapper">
+    <?php if ($data && mysqli_num_rows($data) > 0): ?>
+        <?php while ($row = mysqli_fetch_object($data)) : ?>
+            <div class="card-aspirasi">
+                <div class="card-header">
+                    <div class="user-info">
+                        <span class="user-name"><?= htmlspecialchars($row->nama_lengkap) ?></span>
+                        <span class="badge-kelas"><?= htmlspecialchars($row->kelas) ?></span>
+                        <span class="status-pill <?= strtolower($row->status) ?>"><?= $row->status ?></span>
+                    </div>
+                    <button class="btn-balas" 
+                            onclick="openModal('<?= $row->id ?>', '<?= htmlspecialchars($row->nama_lengkap) ?>', '<?= htmlspecialchars($row->judul) ?>', '<?= htmlspecialchars($row->pesan) ?>')">
+                        Balas Aspirasi
+                    </button>
+                </div>
 
-<?php if ($data && mysqli_num_rows($data) > 0): ?>
-<?php while ($row = mysqli_fetch_object($data)) : ?>
+                <div class="judul-aspirasi"><?= htmlspecialchars($row->judul) ?></div>
+                <p class="isi-aspirasi"><?= nl2br(htmlspecialchars($row->pesan)) ?></p>
 
-<div class="card-aspirasi">
-
-  <div class="card-header">
-    <div>
-      <strong><?= htmlspecialchars($row->nama_lengkap) ?></strong>
-      <span class="kelas"><?= htmlspecialchars($row->kelas) ?></span>
-      <span class="status <?= $row->status ?>">
-        <?= ucfirst($row->status) ?>
-      </span>
-    </div>
-
-    <button class="icon-btn btn-balas"
-      data-id="<?= $row->id ?>"
-      data-nama="<?= htmlspecialchars($row->nama_lengkap) ?>"
-      data-kelas="<?= htmlspecialchars($row->kelas) ?>"
-      data-judul="<?= htmlspecialchars($row->judul) ?>"
-      data-pesan="<?= htmlspecialchars($row->pesan) ?>">
-      <svg viewBox="0 0 24 24" fill="none">
-        <path d="M4 4H20V16H6L4 18V4Z"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linejoin="round"/>
-      </svg>
-    </button>
-  </div>
-
-  <h4><?= htmlspecialchars($row->judul) ?></h4>
-  <p class="pesan"><?= htmlspecialchars($row->pesan) ?></p>
-
-  <div class="riwayat">
-    <?php
-      $riwayat = $umpanbalik->riwayat($row->id);
-      $jumlah  = mysqli_num_rows($riwayat);
-    ?>
-
-    <strong>
-      Riwayat Tanggapan
-      <span class="status diproses"><?= $jumlah ?></span>
-    </strong>
-
-    <?php if ($jumlah == 0): ?>
-      <p><i>Belum ada tanggapan</i></p>
-    <?php else: ?>
-      <ul class="riwayat-list">
-        <?php while ($r = mysqli_fetch_object($riwayat)) : ?>
-          <li>
-            <?= htmlspecialchars($r->tanggapan) ?>
-            <span class="waktu">
-              (<?= date('d M Y H:i', strtotime($r->created_at)) ?>)
-            </span>
-          </li>
+                <div class="riwayat-section">
+                    <div class="riwayat-title">💬 Riwayat Tanggapan Admin</div>
+                    <ul class="riwayat-list">
+                        <?php 
+                        $riwayat = $umpanbalik->riwayat($row->id);
+                        if(mysqli_num_rows($riwayat) > 0): 
+                            while ($r = mysqli_fetch_object($riwayat)) : ?>
+                                <li class="riwayat-item">
+                                    <?= htmlspecialchars($r->tanggapan) ?>
+                                    <span class="timestamp"><?= date('d M, H:i', strtotime($r->created_at)) ?></span>
+                                </li>
+                            <?php endwhile; 
+                        else: ?>
+                            <li class="riwayat-item" style="color:#94a3b8; font-style:italic; font-size:13px;">Belum ada tanggapan yang dikirim.</li>
+                        <?php endif; ?>
+                    </ul>
+                </div>
+            </div>
         <?php endwhile; ?>
-      </ul>
+    <?php else: ?>
+        <div style="text-align:center; padding:50px; background:white; border-radius:12px; border:1px solid #e5e7eb;">
+            <p style="color:#94a3b8;">Tidak ada data aspirasi yang perlu ditanggapi.</p>
+        </div>
     <?php endif; ?>
-  </div>
-
 </div>
 
-<?php endwhile; ?>
-<?php else: ?>
-<p>Tidak ada aspirasi</p>
-<?php endif; ?>
-
-</div>
-
-<!-- MODAL -->
 <div id="modalBalas" class="modal">
-  <div class="modal-box">
-    <h3>Balas Aspirasi</h3>
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 style="margin:0; font-size:18px;">Kirim Tanggapan</h3>
+        </div>
+        <form action="../../controllers/c_umpanbalik.php?aksi=tambah" method="POST">
+            <div class="modal-body">
+                <input type="hidden" name="aspirasi_id" id="m_id">
+                
+                <div class="ref-box">
+                    <span class="ref-label">Siswa</span>
+                    <div id="m_nama" style="font-weight:600; margin-bottom:10px; color:#1e293b;"></div>
+                    
+                    <span class="ref-label">Judul Aspirasi</span>
+                    <div id="m_judul" style="font-weight:600; margin-bottom:10px; color:#1e293b;"></div>
+                    
+                    <span class="ref-label">Isi Pesan</span>
+                    <div id="m_pesan" style="color:#475569; font-style:italic; line-height:1.4;"></div>
+                </div>
 
-    <div class="detail">
-      <p><strong>Nama:</strong> <span id="d_nama"></span></p>
-      <p><strong>Kelas:</strong> <span id="d_kelas"></span></p>
-      <p><strong>Judul:</strong></p>
-      <div id="d_judul" class="box"></div>
-      <p><strong>Isi:</strong></p>
-      <div id="d_pesan" class="box"></div>
+                <div class="form-group">
+                    <label style="display:block; font-weight:700; font-size:12px; margin-bottom:8px; color:#475569; text-transform:uppercase;">Tanggapan Anda:</label>
+                    <textarea name="tanggapan" class="input-tanggapan" required placeholder="Tulis solusi atau jawaban resmi di sini..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="closeModal()" style="background:none; border:none; cursor:pointer; font-weight:600; color:#64748b; margin-right:20px;">Batal</button>
+                <button type="submit" class="btn-balas" style="padding:10px 25px;">Kirim Sekarang</button>
+            </div>
+        </form>
     </div>
-
-    <form action="../../controllers/c_umpanbalik.php?aksi=tambah" method="POST">
-      <input type="hidden" name="aspirasi_id" id="aspirasi_id">
-      <textarea name="tanggapan" required placeholder="Tulis tanggapan di sini..."></textarea>
-
-      <div class="modal-aksi">
-        <button type="submit">Kirim</button>
-        <button type="button" onclick="closeModal()">Batal</button>
-      </div>
-    </form>
-  </div>
 </div>
 
 <script>
-const modalBalas = document.getElementById('modalBalas');
-const aspirasi_id = document.getElementById('aspirasi_id');
-const d_nama = document.getElementById('d_nama');
-const d_kelas = document.getElementById('d_kelas');
-const d_judul = document.getElementById('d_judul');
-const d_pesan = document.getElementById('d_pesan');
+    function openModal(id, nama, judul, pesan) {
+        document.getElementById('modalBalas').style.display = 'block';
+        document.getElementById('m_id').value = id;
+        document.getElementById('m_nama').innerText = nama;
+        document.getElementById('m_judul').innerText = judul;
+        document.getElementById('m_pesan').innerText = '"' + pesan + '"';
+    }
 
-document.querySelectorAll('.btn-balas').forEach(btn => {
-  btn.onclick = () => {
-    modalBalas.style.display = 'block';
-    aspirasi_id.value = btn.dataset.id;
-    d_nama.innerText = btn.dataset.nama;
-    d_kelas.innerText = btn.dataset.kelas;
-    d_judul.innerText = btn.dataset.judul;
-    d_pesan.innerText = btn.dataset.pesan;
-  }
-});
+    function closeModal() { 
+        document.getElementById('modalBalas').style.display = 'none'; 
+    }
 
-function closeModal() {
-  modalBalas.style.display = 'none';
-}
-
-window.onclick = function(e) {
-  if (e.target == modalBalas) {
-    closeModal();
-  }
-}
+    // Menutup modal jika klik di luar box
+    window.onclick = function(event) {
+        const modal = document.getElementById('modalBalas');
+        if (event.target == modal) closeModal();
+    }
 </script>
 
-<?php include '../layout/footer.php'; ?>
+<?php include '../layout/footer.php'; ?>`

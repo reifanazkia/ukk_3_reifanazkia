@@ -1,55 +1,47 @@
 <?php
-
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+// Hubungkan ke Model (Pastikan path ke models/m_umpanbalik.php benar)
 include_once __DIR__ . '/../models/m_umpanbalik.php';
 
+// Inisialisasi
+$umpanbalik = new umpanbalik();
+
+// Cek Login & Identitas
 if (!isset($_SESSION['data'])) {
-    header("Location: ../index.php");
+    header("Location: ../../index.php");
     exit;
 }
 
-$umpanbalik = new umpanbalik();
 $role   = $_SESSION['data']['role'];
 $userId = $_SESSION['data']['id'];
- try {
-    //code...
-$aksi = $_GET['aksi'] ?? '';
 
-// ================= PROSES TAMBAH (ADMIN) =================
-if ($aksi === 'tambah') {
-
+// PROSES TAMBAH (HANYA ADMIN)
+if (isset($_GET['aksi']) && $_GET['aksi'] === 'tambah') {
     if ($role !== 'admin') {
-        header("HTTP/1.1 403 Forbidden");
-        exit('Akses ditolak');
+        die("Akses ditolak!");
     }
 
     $aspirasi_id = $_POST['aspirasi_id'] ?? '';
     $tanggapan   = trim($_POST['tanggapan'] ?? '');
 
-    if (!$aspirasi_id || !$tanggapan) {
+    if ($aspirasi_id && $tanggapan) {
+        $simpan = $umpanbalik->tambah($aspirasi_id, $tanggapan);
+        $status = $simpan ? 'berhasil' : 'gagal';
+        header("Location: ../views/admin/umpanbalik.php?status=$status");
+    } else {
         header("Location: ../views/admin/umpanbalik.php?status=invalid");
-        exit;
     }
-
-    $simpan = $umpanbalik->tambah($aspirasi_id, $tanggapan);
-
-    header(
-        "Location: ../views/admin/umpanbalik.php?status=" .
-        ($simpan ? 'berhasil' : 'gagal')
-    );
     exit;
 }
 
-// ================= AMBIL DATA =================
+//  AMBIL DATA UNTUK DITAMPILKAN 
+// Variabel $data inilah yang akan digunakan oleh file VIEW
 if ($role === 'admin') {
-    $data = $umpanbalik->tampil_data();
+    $data = $umpanbalik->tampil_data(); // Admin lihat semua
 } else {
-    $data = $umpanbalik->tampil_data($userId);
+    $data = $umpanbalik->tampil_data($userId); // User lihat miliknya saja
 }
-
-} catch (Exception $e) {
-     echo "Error: " . $e->getMessage();
- }
+?>

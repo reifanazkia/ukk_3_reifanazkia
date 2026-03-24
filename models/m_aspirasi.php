@@ -3,13 +3,20 @@ include_once 'm_koneksi.php';
 
 class aspirasi
 {
-    public function tampil_data()
+    // Ditambahkan parameter $user_id dengan default null
+    public function tampil_data($user_id = null)
     {
         $conn = new koneksi();
         $sql  = "SELECT aspirasi.*, kategori.nama_kategori 
                  FROM aspirasi 
-                 JOIN kategori ON aspirasi.id_categori = kategori.id 
-                 ORDER BY aspirasi.created_at DESC";
+                 JOIN kategori ON aspirasi.id_categori = kategori.id";
+        
+        // Jika user_id diisi (untuk User), maka difilter. Jika null (untuk Admin), tampil semua.
+        if ($user_id !== null) {
+            $sql .= " WHERE aspirasi.user_id = '$user_id'";
+        }
+
+        $sql .= " ORDER BY aspirasi.created_at DESC";
         $query = mysqli_query($conn->koneksi, $sql);
         $hasil = [];
         if ($query) {
@@ -20,34 +27,34 @@ class aspirasi
         return $hasil;
     }
 
-    public function tampil_aspirasi_untuk_umpanbalik()
+    public function tampil_aspirasi_untuk_umpanbalik($user_id = null)
     {
         $conn = new koneksi();
-        $sql = "SELECT aspirasi.*,
-                   umpan_balik.id AS sudah_ditanggapi
-            FROM aspirasi
-            LEFT JOIN umpan_balik 
-              ON umpan_balik.aspirasi_id = aspirasi.id
-            ORDER BY aspirasi.created_at DESC";
+        $sql = "SELECT aspirasi.*, umpan_balik.id AS sudah_ditanggapi
+                FROM aspirasi
+                LEFT JOIN umpan_balik ON umpan_balik.aspirasi_id = aspirasi.id";
 
+        if ($user_id !== null) {
+            $sql .= " WHERE aspirasi.user_id = '$user_id'";
+        }
+
+        $sql .= " ORDER BY aspirasi.created_at DESC";
         $query = mysqli_query($conn->koneksi, $sql);
         $hasil = [];
-
         while ($row = mysqli_fetch_object($query)) {
             $hasil[] = $row;
         }
-
         return $hasil;
     }
 
-
-    public function tambah_data($nama_lengkap, $kelas, $id_categori, $judul, $pesan)
+    public function tambah_data($user_id, $nama_lengkap, $kelas, $id_categori, $judul, $pesan)
     {
         $conn = new koneksi();
-        $sql  = "INSERT INTO aspirasi (nama_lengkap, kelas, id_categori, judul, pesan, status) 
-                 VALUES ('$nama_lengkap', '$kelas', '$id_categori', '$judul', '$pesan', 'menunggu')";
+        // Status default adalah 'menunggu'
+        $sql  = "INSERT INTO aspirasi (user_id, nama_lengkap, kelas, id_categori, judul, pesan, status) 
+                 VALUES ('$user_id', '$nama_lengkap', '$kelas', '$id_categori', '$judul', '$pesan', 'menunggu')";
         $query = mysqli_query($conn->koneksi, $sql);
-        $this->alert_redirect($query, "Data berhasil dikirim", "../views/user/aspirasi.php");
+        $this->alert_redirect($query, "Aspirasi berhasil dikirim", "../views/user/aspirasi.php");
     }
 
     public function edit_data($id, $nama_lengkap, $kelas, $id_categori, $judul, $pesan)
@@ -63,22 +70,17 @@ class aspirasi
         $conn = new koneksi();
         $sql  = "UPDATE aspirasi SET status = '$status' WHERE id = '$id'";
         $query = mysqli_query($conn->koneksi, $sql);
-        $this->alert_redirect($query, "Status berhasil diperbarui", "../views/admin/aspirasi.php");
+        $this->alert_redirect($query, "Status berhasil diperbarui", "../views/admin/umpan_balik.php");
     }
 
     public function hapus($id)
     {
         $conn = new koneksi();
-
-        // hapus semua umpan balik milik aspirasi ini
+        // Hapus umpan balik terkait dulu agar tidak error constraint
         mysqli_query($conn->koneksi, "DELETE FROM umpan_balik WHERE aspirasi_id = '$id'");
-        // hapus aspirasi
         $query = mysqli_query($conn->koneksi, "DELETE FROM aspirasi WHERE id = '$id'");
-
         $this->alert_redirect($query, "Data berhasil dihapus", "../views/admin/aspirasi.php");
     }
-
-
 
     private function alert_redirect($query, $msg, $url)
     {
@@ -89,3 +91,4 @@ class aspirasi
         }
     }
 }
+?>
