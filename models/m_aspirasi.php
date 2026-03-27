@@ -25,6 +25,50 @@ class aspirasi
         return $hasil;
     }
 
+    public function filter_data($tanggal = null, $bulan = null, $kategori = null, $siswa = null)
+    {
+        $conn = new koneksi();
+
+        $sql = "SELECT aspirasi.*, kategori.nama_kategori
+            FROM aspirasi
+            JOIN kategori ON aspirasi.id_categori = kategori.id
+            WHERE 1=1";
+
+        // FILTER TANGGAL
+        if (!empty($tanggal)) {
+            $sql .= " AND DATE(aspirasi.created_at) = '$tanggal'";
+        }
+
+        // FILTER BULAN
+        if (!empty($bulan)) {
+            $sql .= " AND MONTH(aspirasi.created_at) = '$bulan'";
+        }
+
+        // FILTER KATEGORI
+        if (!empty($kategori)) {
+            $sql .= " AND aspirasi.id_categori = '$kategori'";
+        }
+
+        // FILTER SISWA
+        if (!empty($siswa)) {
+            $sql .= " AND aspirasi.nama_lengkap LIKE '%$siswa%'";
+        }
+
+        $sql .= " ORDER BY aspirasi.created_at DESC";
+
+        $query = mysqli_query($conn->koneksi, $sql);
+
+        $hasil = [];
+
+        if ($query) {
+            while ($data = mysqli_fetch_object($query)) {
+                $hasil[] = $data;
+            }
+        }
+
+        return $hasil;
+    }
+
     public function tampil_data_per_user($user_id)
     {
         $conn = new koneksi();
@@ -74,7 +118,7 @@ class aspirasi
             $hasil[] = $d;
         }
         return $hasil;
-    }   
+    }
 
     public function tambah_data($user_id, $nama_lengkap, $kelas, $id_categori, $judul, $pesan, $foto)
     {

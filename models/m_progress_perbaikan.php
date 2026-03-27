@@ -51,22 +51,6 @@ class ProgressPerbaikan
         $this->alert_redirect($query, "Progress berhasil ditambahkan", "../views/admin/progress_perbaikan.php");
     }
 
-    public function edit_data($id, $keterangan, $estimasi_selesai, $foto)
-{
-    $conn = new koneksi();
-    
-    // Query SQL hanya untuk tabel progress_perbaikan
-    $sql  = "UPDATE progress_perbaikan SET 
-             keterangan='$keterangan', 
-             estimasi_selesai='$estimasi_selesai', 
-             foto='$foto' 
-             WHERE id='$id'";
-             
-    $query = mysqli_query($conn->koneksi, $sql);
-    
-    // Redirect kembali ke halaman progress perbaikan
-    $this->alert_redirect($query, "Log perbaikan berhasil diubah", "../views/admin/progress_perbaikan.php");
-}
 
     public function hapus($id)
     {

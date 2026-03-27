@@ -10,111 +10,192 @@ include '../layout/sidebar.php';
 
 $m_aspirasi = new aspirasi();
 
-// --- LOGIKA PAGINATION ---
+// --- LOGIKA PAGINATION ADMIN ---
 $jumlahDataPerHalaman = 10;
-$totalData = $m_aspirasi->hitung_total_aspirasi(); 
+$totalData = $m_aspirasi-> hitung_total_aspirasi(); // Pastikan fungsi ini ada di model
 $jumlahHalaman = ceil($totalData / $jumlahDataPerHalaman);
 $halamanAktif = (isset($_GET['halaman'])) ? (int)$_GET['halaman'] : 1;
 $awalData = ($jumlahDataPerHalaman * $halamanAktif) - $jumlahDataPerHalaman;
 
-// Menggunakan fungsi sesuai model Anda
 $data_history = $m_aspirasi->tampil_semua_history_paginated($awalData, $jumlahDataPerHalaman); 
 ?>
 
 <style>
+    /* 1. Configuration & Variables */
     :root {
         --primary: #2563eb;
+        --primary-soft: #eff6ff;
         --bg-light: #f8fafc;
         --text-main: #1e293b;
         --text-muted: #64748b;
         --border-color: #e2e8f0;
+        --white: #ffffff;
+        --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
     }
 
-    .page-header { margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 2px solid var(--border-color); }
-    .container-cards { display: flex; flex-direction: column; gap: 1.25rem; }
-    
+    /* 2. Page Header */
+    .page-header {
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid var(--border-color);
+    }
+
+    .page-title {
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: var(--text-main);
+    }
+
+    /* 3. Card Component */
     .card-aspirasi {
-        background: #fff; border: 1px solid var(--border-color); border-radius: 16px;
-        overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); transition: 0.2s;
+        background: var(--white);
+        border: 1px solid var(--border-color);
+        border-radius: 16px;
+        overflow: hidden;
+        margin-bottom: 1.5rem;
+        box-shadow: var(--shadow-sm);
     }
 
     .card-top {
-        display: flex; align-items: center; justify-content: space-between;
-        padding: 1rem 1.25rem; background: var(--bg-light); border-bottom: 1px solid var(--border-color);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1rem 1.5rem;
+        background: var(--bg-light);
+        border-bottom: 1px solid var(--border-color);
     }
 
-    .avatar {
-        width: 2.5rem; height: 2.5rem; background: var(--primary); color: #fff;
-        border-radius: 12px; display: flex; align-items: center; justify-content: center; font-weight: 800;
+    .card-body {
+        padding: 1.5rem;
     }
 
-    .badge {
-        font-size: 0.7rem; font-weight: 800; padding: 0.25rem 0.6rem; border-radius: 6px;
-        text-transform: uppercase; border: 1px solid transparent;
+    /* 4. Elements & Typography */
+    .user-info {
+        font-size: 0.75rem;
+        font-weight: 800;
+        color: var(--primary);
+        text-transform: uppercase;
+        letter-spacing: 0.025em;
+        margin-bottom: 0.5rem;
+        display: block;
     }
-    .badge-menunggu { background: #f1f5f9; color: #475569; border-color: #cbd5e1; }
-    .badge-diproses { background: #fffbeb; color: #b45309; border-color: #fcd34d; }
-    .badge-selesai  { background: #f0fdf4; color: #047857; border-color: #6ee7b7; }
 
-    .card-body { padding: 1.5rem; }
     .aspirasi-text {
-        font-size: 0.95rem; color: var(--text-muted); line-height: 1.6;
-        background: #fafafa; padding: 1rem; border-radius: 12px; border: 1px dashed var(--border-color);
+        font-size: 0.95rem;
+        color: var(--text-muted);
+        line-height: 1.6;
+        background: #fafafa;
+        padding: 1.25rem;
+        border-radius: 12px;
+        border: 1px dashed var(--border-color);
+        margin-bottom: 1.25rem;
     }
 
-    .card-footer {
-        padding: 0.85rem 1.5rem; border-top: 1px solid var(--border-color);
-        font-size: 0.75rem; color: var(--text-muted); display: flex; align-items: center; justify-content: space-between;
+    /* 5. Images */
+    .history-img-container {
+        margin-top: 1rem;
     }
 
-    /* Pagination Styling */
-    .pagination { display: flex; justify-content: center; gap: 8px; margin: 2rem 0; }
+    .history-label {
+        display: block;
+        font-size: 10px;
+        font-weight: 800;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        margin-bottom: 0.5rem;
+    }
+
+    .history-img-admin {
+        max-width: 220px;
+        height: auto;
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+        cursor: zoom-in;
+        transition: transform 0.2s ease-in-out;
+    }
+
+    .history-img-admin:hover {
+        transform: scale(1.02);
+    }
+
+    /* 6. Badges */
+    .badge {
+        font-size: 0.7rem;
+        font-weight: 800;
+        padding: 0.35rem 0.75rem;
+        border-radius: 6px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .badge-menunggu { background: #f1f5f9; color: #475569; }
+    .badge-diproses { background: #fffbeb; color: #b45309; }
+    .badge-selesai  { background: #f0fdf4; color: #166534; }
+
+    /* 7. Pagination */
+    .pagination {
+        display: flex;
+        justify-content: center;
+        gap: 0.5rem;
+        margin: 2.5rem 0;
+    }
+
     .pagination a {
-        padding: 8px 16px; border: 1px solid var(--border-color); border-radius: 10px;
-        color: var(--text-muted); text-decoration: none; font-weight: 700; transition: 0.3s;
+        padding: 0.6rem 1.1rem;
+        background: var(--white);
+        border: 1px solid var(--border-color);
+        border-radius: 10px;
+        color: var(--text-muted);
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 0.9rem;
+        transition: all 0.2s;
     }
-    .pagination a.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+    .pagination a:hover {
+        border-color: var(--primary);
+        color: var(--primary);
+    }
+
+    .pagination a.active {
+        background: var(--primary);
+        color: var(--white);
+        border-color: var(--primary);
+        box-shadow: 0 4px 6px -1px rgb(37 99 235 / 0.2);
+    }
 </style>
 
 <div class="page-header">
-    <h2 class="page-title">Riwayat Seluruh Aspirasi</h2>
-    <p style="color: var(--text-muted);">Monitoring data (Halaman <?= $halamanAktif ?> dari <?= $jumlahHalaman ?>).</p>
+    <h2 class="page-title">Riwayat Seluruh Aspirasi (Admin)</h2>
 </div>
 
 <div class="container-cards">
-    <?php foreach ($data_history as $row) : ?>
-        <article class="card-aspirasi">
-            <div class="card-top">
-                <div style="display: flex; align-items: center; gap: 0.85rem;">
-                    <div class="avatar"><?= strtoupper(substr($row->nama_lengkap, 0, 1)) ?></div>
+    <?php if (empty($data_history)) : ?>
+        <p style="text-align: center; color: var(--text-muted); padding: 3rem;">Belum ada data riwayat.</p>
+    <?php else : ?>
+        <?php foreach ($data_history as $row) : ?>
+            <article class="card-aspirasi">
+                <div class="card-top">
                     <div>
-                        <span style="display: block; font-weight: 700; font-size: 0.9rem; text-transform: uppercase;"><?= htmlspecialchars($row->nama_lengkap) ?></span>
+                        <span class="user-info">Oleh: <?= htmlspecialchars($row->nama_lengkap ?? 'User') ?></span>
                         <span class="badge badge-<?= strtolower($row->status) ?>"><?= $row->status ?></span>
                     </div>
-                </div>
-                <div style="text-align: right;">
-                    <small style="font-weight: 700; color: var(--text-muted); display: block; font-size: 0.65rem;">ID LAPORAN</small>
                     <span style="font-weight: 800; color: var(--primary);">#<?= $row->id ?></span>
                 </div>
-            </div>
-            <div class="card-body">
-                <h3 style="font-size: 1.1rem; font-weight: 800; margin-bottom: 0.5rem;"><?= htmlspecialchars($row->judul) ?></h3>
-                <p class="aspirasi-text"><?= nl2br(htmlspecialchars($row->pesan)) ?></p>
-            </div>
-            <div class="card-footer">
-                <div style="display: flex; align-items: center; gap: 6px;">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                        <line x1="16" y1="2" x2="16" y2="6"></line>
-                        <line x1="8" y1="2" x2="8" y2="6"></line>
-                        <line x1="3" y1="10" x2="21" y2="10"></line>
-                    </svg>
-                    <span>Dikirim: <?= date('d M Y', strtotime($row->created_at ?? 'now')) ?></span>
+                <div class="card-body">
+                    <h3 style="font-weight: 800; margin-bottom: 0.5rem;"><?= htmlspecialchars($row->judul) ?></h3>
+                    <p class="aspirasi-text"><?= nl2br(htmlspecialchars($row->pesan)) ?></p>
+                    
+                    <?php if (!empty($row->foto)) : ?>
+                        <div>
+                            <small style="display:block; font-size:10px; font-weight:800; color:#94a3b8; margin-bottom:5px; text-transform:uppercase;">Foto Bukti Siswa:</small>
+                            <img src="../../assets/image/<?= $row->foto ?>" class="history-img-admin" onclick="window.open(this.src)" onerror="this.src='https://placehold.co/200x150?text=Foto+Tidak+Ditemukan'">
+                        </div>
+                    <?php endif; ?>
                 </div>
-                <span style="font-weight: 600;">SARPRAS SYSTEM</span>
-            </div>
-        </article>
-    <?php endforeach; ?>
+            </article>
+        <?php endforeach; ?>
+    <?php endif; ?>
 </div>
 
 <div class="pagination">
