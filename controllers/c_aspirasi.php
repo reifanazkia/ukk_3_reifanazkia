@@ -16,7 +16,15 @@ try {
         $id_categori  = $_POST['id_categori'];
         $judul        = $_POST['judul'];
         $pesan        = $_POST['pesan'];
-        $aspirasi->tambah_data($user_id, $nama_lengkap, $kelas, $id_categori, $judul, $pesan);
+
+        $foto = null;
+        if (!empty($_FILES['foto']['name'])) {
+            $foto = time() . "_" . $_FILES['foto']['name'];
+            // Pastikan folder assets/image/ sudah ada
+            move_uploaded_file($_FILES['foto']['tmp_name'], "../../assets/image/" . $foto);
+        }
+
+        $aspirasi->tambah_data($user_id, $nama_lengkap, $kelas, $id_categori, $judul, $pesan, $foto);
 
     } elseif ($aksi == 'update') {
         $id           = $_POST['id'];
@@ -25,10 +33,22 @@ try {
         $id_categori  = $_POST['id_categori'];
         $judul        = $_POST['judul'];
         $pesan        = $_POST['pesan'];
-        $aspirasi->edit_data($id, $nama_lengkap, $kelas, $id_categori, $judul, $pesan);
+        
+        $foto_lama = $_POST['foto_lama'];
+        $foto = $foto_lama;
+
+        if (!empty($_FILES['foto']['name'])) {
+            // Hapus foto lama dari folder fisik jika ada
+            if ($foto_lama && file_exists("../../assets/image/" . $foto_lama)) {
+                unlink("../../assets/image/" . $foto_lama);
+            }
+            $foto = time() . "_" . $_FILES['foto']['name'];
+            move_uploaded_file($_FILES['foto']['tmp_name'], "../../assets/image/" . $foto);
+        }
+
+        $aspirasi->edit_data($id, $nama_lengkap, $kelas, $id_categori, $judul, $pesan, $foto);
 
     } elseif ($aksi == 'update_status') {
-        // Digunakan oleh Admin untuk ubah status ke (diproses/selesai/ditolak)
         $id     = $_POST['id'];
         $status = $_POST['status'];
         $aspirasi->edit_status_admin($id, $status);
@@ -36,16 +56,6 @@ try {
     } elseif ($aksi == 'hapus') {
         $id = $_GET['id'];
         $aspirasi->hapus($id);
-        
-    } else {
-        // LOGIKA FILTER:
-        // Jika yang login adalah 'user', ambil ID-nya. Jika 'admin', biarkan null.
-        $user_id = null;
-        if (isset($_SESSION['data']) && $_SESSION['data']['role'] === 'user') {
-            $user_id = $_SESSION['data']['id'];
-        }
-        
-        $data_aspirasi = $aspirasi->tampil_data($user_id);
     }
 } catch (Exception $e) {
     echo "Error: " . $e->getMessage();

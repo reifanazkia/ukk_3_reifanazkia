@@ -185,12 +185,20 @@ function toggleSidebar() {
     <span>Kategori</span>
   </a>
 
-  <a href="history.php" class="menu-item <?= $current=='history.php'?'active':'' ?>">
+  <a href="../admin/progress_perbaikan.php" class="menu-item <?= $current=='progres.php'?'active':'' ?>">
+    <svg class="menu-icon" fill="none" stroke-width="2" viewBox="0 0 24 24">
+      <path d="M4 12h16M4 6h16M4 18h16"/>
+    </svg>
+    <span>Progres Perbaikan</span>
+  </a>
+
+  <a href="../admin/history.php" class="menu-item <?= $current=='history.php'?'active':'' ?>">
     <svg class="menu-icon" fill="none" stroke-width="2" viewBox="0 0 24 24">
       <path d="M12 8v4l3 3M12 2a10 10 0 100 20 10 10 0 000-20z"/>
     </svg>
     <span>History</span>
   </a>
+
 
 <?php elseif ($role === 'user') : ?>
   <h3>User</h3>
@@ -216,18 +224,18 @@ function toggleSidebar() {
     <span>Umpan Balik</span>
   </a>
 
-  <a href="history.php" class="menu-item <?= $current=='history.php'?'active':'' ?>">
-    <svg class="menu-icon" fill="none" stroke-width="2" viewBox="0 0 24 24">
-      <path d="M12 8v4l3 3M12 2a10 10 0 100 20 10 10 0 000-20z"/>
-    </svg>
-    <span>History</span>
-  </a>
-
-  <a href="progres.php" class="menu-item <?= $current=='progres.php'?'active':'' ?>">
+  <a href="../user/progress_perbaikan.php" class="menu-item <?= $current=='progres.php'?'active':'' ?>">
     <svg class="menu-icon" fill="none" stroke-width="2" viewBox="0 0 24 24">
       <path d="M4 12h16M4 6h16M4 18h16"/>
     </svg>
     <span>Progres Perbaikan</span>
+  </a>
+
+  <a href="../user/history.php" class="menu-item <?= $current=='history.php'?'active':'' ?>">
+    <svg class="menu-icon" fill="none" stroke-width="2" viewBox="0 0 24 24">
+      <path d="M12 8v4l3 3M12 2a10 10 0 100 20 10 10 0 000-20z"/>
+    </svg>
+    <span>History</span>
   </a>
 
 <?php endif; ?>

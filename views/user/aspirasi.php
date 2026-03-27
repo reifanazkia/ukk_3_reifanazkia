@@ -18,7 +18,7 @@ $kategori = $kategori->tampil_data();
 ?>
 
 <style>
-/* ================= CSS TABEL (LURUS & RAPI) ================= */
+/* ================= CSS LENGKAP ================= */
 .table-aspirasi {
     width: 100%;
     border-collapse: collapse;
@@ -52,24 +52,45 @@ $kategori = $kategori->tampil_data();
     background-color: #f9fafb;
 }
 
+.img-thumbnail-aspirasi {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 6px;
+    cursor: pointer;
+    border: 1px solid #e2e8f0;
+    transition: 0.3s;
+}
+
+.img-thumbnail-aspirasi:hover {
+    transform: scale(1.1);
+}
+
 /* ================= MODAL STYLING ================= */
 .modal {
     display: none;
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.5);
+    background: rgba(0,0,0,0.6);
     z-index: 9999;
+    backdrop-filter: blur(2px);
 }
 
 .modal-content {
     background: #fff;
     width: 90%;
     max-width: 500px;
-    margin: 60px auto;
+    margin: 40px auto;
     padding: 25px;
     border-radius: 12px;
     position: relative;
     box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2);
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from { transform: translateY(-20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
 }
 
 .close {
@@ -103,11 +124,12 @@ $kategori = $kategori->tampil_data();
     border-radius: 6px;
     font-family: inherit;
     font-size: 14px;
+    box-sizing: border-box;
 }
 
 textarea {
     resize: vertical;
-    min-height: 100px;
+    min-height: 80px;
 }
 
 .btn-primary {
@@ -128,7 +150,7 @@ textarea {
 .btn-submit {
     background: #16a34a;
     color: #fff;
-    padding: 10px 20px;
+    padding: 12px 20px;
     border: none;
     border-radius: 6px;
     font-weight: 600;
@@ -151,10 +173,21 @@ textarea {
 .btn-edit:hover {
     background: #f59e0b;
 }
+
+.btn-hapus {
+    background: #ef4444;
+    color: #fff;
+    padding: 6px 14px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-block;
+}
 </style>
 
 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-    <h2 style="margin: 0; color: #1e293b;">Data Aspirasi Siswa</h2>
+    <h2 style="margin: 0; color: #1e293b;">Data Aspirasi Saya</h2>
     <button onclick="openTambah()" class="btn-primary">+ Tambah Aspirasi</button>
 </div>
 
@@ -162,8 +195,7 @@ textarea {
     <thead>
         <tr>
             <th>No</th>
-            <th>Nama</th>
-            <th>Kelas</th>
+            <th>Foto</th>
             <th>Kategori</th>
             <th>Judul</th>
             <th>Pesan</th>
@@ -176,27 +208,43 @@ textarea {
             <?php $no = 1; foreach ($data_aspirasi as $row) : ?>
             <tr>
                 <td><?= $no++ ?></td>
-                <td><?= htmlspecialchars($row->nama_lengkap) ?></td>
-                <td><?= htmlspecialchars($row->kelas) ?></td>
+                <td>
+                    <?php if($row->foto): ?>
+                        <img src="../../assets/image/<?= $row->foto ?>" class="img-thumbnail-aspirasi" onclick="window.open(this.src)" title="Klik untuk memperbesar">
+                    <?php else: ?>
+                        <span style="color: #cbd5e1; font-size: 11px;">Tidak ada foto</span>
+                    <?php endif; ?>
+                </td>
                 <td><?= htmlspecialchars($row->nama_kategori) ?></td>
                 <td><?= htmlspecialchars($row->judul) ?></td>
-                <td><?= nl2br(htmlspecialchars($row->pesan)) ?></td>
-                <td><?= ucfirst($row->status) ?></td>
+                <td><?= (strlen($row->pesan) > 30) ? htmlspecialchars(substr($row->pesan, 0, 30)) . '...' : htmlspecialchars($row->pesan) ?></td>
+                <td>
+                    <span style="padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; 
+                        background: <?= $row->status == 'selesai' ? '#dcfce7' : ($row->status == 'ditolak' ? '#fee2e2' : '#fef9c3') ?>;
+                        color: <?= $row->status == 'selesai' ? '#166534' : ($row->status == 'ditolak' ? '#991b1b' : '#854d0e') ?>;">
+                        <?= ucfirst($row->status) ?>
+                    </span>
+                </td>
                 <td align="center">
                     <a href="javascript:void(0)" onclick="openEdit(
                         '<?= $row->id ?>',
-                        '<?= htmlspecialchars($row->nama_lengkap) ?>',
-                        '<?= htmlspecialchars($row->kelas) ?>',
+                        '<?= addslashes($row->nama_lengkap) ?>',
+                        '<?= addslashes($row->kelas) ?>',
                         '<?= $row->id_categori ?>',
-                        '<?= htmlspecialchars($row->judul) ?>',
-                        '<?= htmlspecialchars($row->pesan) ?>'
+                        '<?= addslashes($row->judul) ?>',
+                        '<?= addslashes($row->pesan) ?>',
+                        '<?= $row->foto ?>'
                     )" class="btn-edit">Edit</a>
+                    
+                    <a href="../../controllers/c_aspirasi.php?aksi=hapus&id=<?= $row->id ?>" 
+                       onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?')" 
+                       class="btn-hapus">Hapus</a>
                 </td>
             </tr>
             <?php endforeach; ?>
         <?php else : ?>
             <tr>
-                <td colspan="8" align="center" style="color: #94a3b8; padding: 40px;">Data belum ada</td>
+                <td colspan="7" align="center" style="color: #94a3b8; padding: 40px;">Anda belum mengirim aspirasi</td>
             </tr>
         <?php endif; ?>
     </tbody>
@@ -205,15 +253,15 @@ textarea {
 <div id="modalTambah" class="modal">
     <div class="modal-content">
         <span class="close" onclick="closeTambah()">&times;</span>
-        <h3 style="margin-top: 0;">Tambah Aspirasi</h3>
-        <form action="../../controllers/c_aspirasi.php?aksi=tambah" method="post">
+        <h3 style="margin-top: 0; color: #1e293b;">Tambah Aspirasi Baru</h3>
+        <form action="../../controllers/c_aspirasi.php?aksi=tambah" method="post" enctype="multipart/form-data">
             <div class="form-group">
                 <label>Nama Lengkap</label>
-                <input type="text" name="nama_lengkap" placeholder="Nama Lengkap" required>
+                <input type="text" name="nama_lengkap" placeholder="Masukkan nama" required>
             </div>
             <div class="form-group">
                 <label>Kelas</label>
-                <input type="text" name="kelas" placeholder="Kelas" required>
+                <input type="text" name="kelas" placeholder="Contoh: XII RPL 1" required>
             </div>
             <div class="form-group">
                 <label>Kategori</label>
@@ -225,14 +273,18 @@ textarea {
                 </select>
             </div>
             <div class="form-group">
-                <label>Judul</label>
-                <input type="text" name="judul" placeholder="Judul" required>
+                <label>Judul Aspirasi</label>
+                <input type="text" name="judul" placeholder="Judul singkat" required>
             </div>
             <div class="form-group">
-                <label>Pesan</label>
-                <textarea name="pesan" placeholder="Tulis pesan..." required></textarea>
+                <label>Pesan / Detail</label>
+                <textarea name="pesan" placeholder="Jelaskan aspirasi Anda secara lengkap..." required></textarea>
             </div>
-            <button type="submit" class="btn-submit">Simpan Aspirasi</button>
+            <div class="form-group">
+                <label>Foto Bukti (Opsional)</label>
+                <input type="file" name="foto" accept="image/*">
+            </div>
+            <button type="submit" class="btn-submit">Kirim Aspirasi</button>
         </form>
     </div>
 </div>
@@ -240,9 +292,11 @@ textarea {
 <div id="modalEdit" class="modal">
     <div class="modal-content">
         <span class="close" onclick="closeEdit()">&times;</span>
-        <h3 style="margin-top: 0;">Edit Aspirasi</h3>
-        <form action="../../controllers/c_aspirasi.php?aksi=update" method="post">
+        <h3 style="margin-top: 0; color: #1e293b;">Edit Aspirasi</h3>
+        <form action="../../controllers/c_aspirasi.php?aksi=update" method="post" enctype="multipart/form-data">
             <input type="hidden" name="id" id="edit_id">
+            <input type="hidden" name="foto_lama" id="edit_foto_lama">
+            
             <div class="form-group">
                 <label>Nama Lengkap</label>
                 <input type="text" name="nama_lengkap" id="edit_nama" required>
@@ -267,7 +321,11 @@ textarea {
                 <label>Pesan</label>
                 <textarea name="pesan" id="edit_pesan" required></textarea>
             </div>
-            <button type="submit" class="btn-submit" style="background: #fbbf24; color: #000;">Update Aspirasi</button>
+            <div class="form-group">
+                <label>Ganti Foto (Kosongkan jika tidak diubah)</label>
+                <input type="file" name="foto" accept="image/*">
+            </div>
+            <button type="submit" class="btn-submit" style="background: #fbbf24; color: #000;">Simpan Perubahan</button>
         </form>
     </div>
 </div>
@@ -279,7 +337,7 @@ function openTambah() {
 function closeTambah() { 
     document.getElementById('modalTambah').style.display = 'none'; 
 }
-function openEdit(id, nama, kelas, kategori, judul, pesan) {
+function openEdit(id, nama, kelas, kategori, judul, pesan, foto) {
     document.getElementById('modalEdit').style.display = 'block';
     document.getElementById('edit_id').value = id;
     document.getElementById('edit_nama').value = nama;
@@ -287,12 +345,13 @@ function openEdit(id, nama, kelas, kategori, judul, pesan) {
     document.getElementById('edit_kategori').value = kategori;
     document.getElementById('edit_judul').value = judul;
     document.getElementById('edit_pesan').value = pesan;
+    document.getElementById('edit_foto_lama').value = foto;
 }
 function closeEdit() { 
     document.getElementById('modalEdit').style.display = 'none'; 
 }
 
-// Tutup modal jika klik di luar area modal
+// Menutup modal saat klik di luar kotak modal
 window.onclick = function(event) {
     if (event.target == document.getElementById('modalTambah')) closeTambah();
     if (event.target == document.getElementById('modalEdit')) closeEdit();
