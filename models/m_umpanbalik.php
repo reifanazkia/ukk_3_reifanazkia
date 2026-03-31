@@ -5,38 +5,23 @@ class umpanbalik
 {
     
     public function tampil_data($user_id = null)
-    {
-        $conn = new koneksi();
+{
+    $conn = new koneksi();
 
-       
-        if ($user_id) {
-            $sql = "SELECT 
-                        a.*,
-                        (
-                            SELECT COUNT(*) 
-                            FROM umpan_balik ub
-                            WHERE ub.aspirasi_id = a.id
-                        ) AS jumlah_balasan
-                    FROM aspirasi a
-                    WHERE a.user_id = '$user_id'
-                    ORDER BY a.created_at DESC";
-        }
-
-
-        else {
-            $sql = "SELECT 
-                        a.*,
-                        (
-                            SELECT COUNT(*) 
-                            FROM umpan_balik ub
-                            WHERE ub.aspirasi_id = a.id
-                        ) AS jumlah_balasan
-                    FROM aspirasi a
-                    ORDER BY a.created_at DESC";
-        }
-
-        return mysqli_query($conn->koneksi, $sql);
+    // Jika ada user_id, ambil aspirasi milik user tersebut saja
+    if ($user_id) {
+        $sql = "SELECT * FROM aspirasi 
+                WHERE user_id = '$user_id' 
+                ORDER BY created_at DESC";
+    } 
+    // Jika tidak ada user_id (untuk tampilan Admin), ambil semua data
+    else {
+        $sql = "SELECT * FROM aspirasi 
+                ORDER BY created_at DESC";
     }
+
+    return mysqli_query($conn->koneksi, $sql);
+}
 
     
     public function riwayat($aspirasi_id)
