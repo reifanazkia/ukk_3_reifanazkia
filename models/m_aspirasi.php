@@ -154,11 +154,11 @@ class aspirasi
 
    public function hapus($id)
 {
-    // 1. Inisialisasi koneksi
+    // Inisialisasi koneksi
     $obj_koneksi = new koneksi();
     $conn = $obj_koneksi->koneksi;
 
-    // 2. Ambil nama file foto sebelum data di database dihapus
+    // Ambil nama file foto sebelum data di database dihapus
     $sql_cek = "SELECT foto FROM aspirasi WHERE id = '$id'";
     $res = mysqli_query($conn, $sql_cek);
 
@@ -174,13 +174,13 @@ class aspirasi
         }
     }
 
-    // 4. Hapus data terkait di tabel umpan_balik (Child Table) agar tidak Error Foreign Key
+    // Hapus data terkait di tabel umpan_balik (Child Table) agar tidak Error Foreign Key
     mysqli_query($conn, "DELETE FROM umpan_balik WHERE aspirasi_id = '$id'");
 
-    // 5. Hapus data utama di tabel aspirasi
+    // Hapus data utama di tabel aspirasi
     $query = mysqli_query($conn, "DELETE FROM aspirasi WHERE id = '$id'");
 
-    // 6. Redirect dengan alert
+    // Redirect dengan alert
    $this->alert_redirect($query, "Data berhasil dihapus", "/ukk_3_reifanazkia/views/user/aspirasi.php");
 }
 

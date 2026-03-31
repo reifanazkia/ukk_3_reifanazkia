@@ -28,9 +28,7 @@ if (!empty($f_tgl) || !empty($f_bln) || !empty($f_kat) || !empty($f_nama)) {
 ?>
 
 <style>
-    /* =========================================
-       1. GLOBAL & LAYOUT
-       ========================================= */
+   
     :root {
         --primary: #2563eb;
         --primary-hover: #1e40af;
@@ -43,9 +41,7 @@ if (!empty($f_tgl) || !empty($f_bln) || !empty($f_kat) || !empty($f_nama)) {
 
     h2 { margin-bottom: 20px; color: var(--text-main); }
 
-    /* =========================================
-       2. FILTER SECTION
-       ========================================= */
+   
     .filter-wrapper {
         background: #fff;
         padding: 20px;
@@ -120,9 +116,8 @@ if (!empty($f_tgl) || !empty($f_bln) || !empty($f_kat) || !empty($f_nama)) {
         color: #1e293b;
     }
 
-    /* =========================================
-       3. TABLE STYLE
-       ========================================= */
+   
+
     .table-aspirasi {
         width: 100%; 
         border-collapse: collapse; 
@@ -159,9 +154,7 @@ if (!empty($f_tgl) || !empty($f_bln) || !empty($f_kat) || !empty($f_nama)) {
         border: 1px solid #ddd; 
     }
 
-    /* =========================================
-       4. BADGES & BUTTONS
-       ========================================= */
+   
     .status-badge { 
         padding: 6px 12px; 
         border-radius: 20px; 
@@ -190,9 +183,8 @@ if (!empty($f_tgl) || !empty($f_bln) || !empty($f_kat) || !empty($f_nama)) {
 
     .btn-edit:hover, .btn-delete:hover { text-decoration: underline; }
 
-    /* =========================================
-       5. MODAL (OVERLAY FIXED)
-       ========================================= */
+   
+
     #modalStatus {
         display: none; 
         position: fixed; 

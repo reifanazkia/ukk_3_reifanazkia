@@ -19,36 +19,61 @@ $data_aspirasi = $m_aspirasi->tampil_data();
 ?>
 
 <style>
+    
     :root {
         --primary: #2563eb;
+        --primary-hover: #1d4ed8;
         --text-main: #111827;
         --text-muted: #6b7280;
         --border-color: #e5e7eb;
+        --bg-light: #f8fafc;
+        --white: #ffffff;
+        --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+        --shadow-md: 0 10px 15px -3px rgba(0,0,0,0.1);
     }
 
+    
+    .page-header { margin-bottom: 2rem; }
+    .page-title { font-weight: 800; color: var(--text-main); }
+    .text-muted { color: var(--text-muted); font-size: 0.9rem; }
+
+    
     .card-aspirasi {
-        background: #ffffff;
+        background: var(--white);
         border: 1px solid var(--border-color);
         border-radius: 12px;
-        margin-bottom: 1rem;
-        box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        margin-bottom: 1.5rem;
+        box-shadow: var(--shadow-sm);
+        overflow: hidden;
     }
 
     .card-top {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 0.8rem 1rem;
+        padding: 1rem;
         border-bottom: 1px solid #f3f4f6;
     }
 
+    
     .user-meta { display: flex; align-items: center; gap: 0.8rem; }
+    
     .avatar {
-        width: 2rem; height: 2rem; background: #eff6ff; color: var(--primary);
-        border-radius: 50%; display: flex; align-items: center; justify-content: center;
-        font-weight: 700; font-size: 0.85rem;
+        width: 2.5rem; height: 2.5rem; 
+        background: #eff6ff; color: var(--primary);
+        border-radius: 50%; 
+        display: flex; align-items: center; justify-content: center;
+        font-weight: 700; font-size: 0.9rem;
     }
-    .user-info-row .name { font-weight: 700; color: var(--text-main); font-size: 0.9rem; text-transform: uppercase; }
+
+    .user-info-row .name { 
+        display: block;
+        font-weight: 700; 
+        color: var(--text-main); 
+        font-size: 0.9rem; 
+        text-transform: uppercase; 
+    }
+
     
     .badge {
         font-size: 0.65rem; font-weight: 800; padding: 0.2rem 0.6rem;
@@ -58,14 +83,30 @@ $data_aspirasi = $m_aspirasi->tampil_data();
     .badge-diproses { background: #fef3c7; color: #92400e; }
     .badge-selesai  { background: #d1fae5; color: #065f46; }
 
+    
+    .aspirasi-title { font-size: 1.1rem; font-weight: 800; color: var(--text-main); margin: 1rem 1rem 0.25rem 1rem; }
+    .aspirasi-text { font-size: 0.9rem; color: var(--text-muted); margin: 0 1rem 1rem 1rem; line-height: 1.6; }
+    
+    .aspirasi-foto-container { margin: 0 1rem 1rem 1rem; }
+    .foto-label { font-size: 0.65rem; font-weight: 800; color: #cbd5e1; margin-bottom: 6px; text-transform: uppercase; }
+    .aspirasi-img { 
+        max-width: 200px; border-radius: 8px; border: 1px solid var(--border-color); 
+        cursor: zoom-in; transition: opacity 0.2s; 
+    }
+    .aspirasi-img:hover { opacity: 0.9; }
+
+    
     .menu-container { position: relative; }
-    .btn-menu { background: none; border: none; cursor: pointer; color: #94a3b8; padding: 6px; border-radius: 50%; transition: 0.2s; }
+    .btn-menu { 
+        background: none; border: none; cursor: pointer; color: #94a3b8; 
+        padding: 8px; border-radius: 50%; transition: 0.2s; 
+    }
     .btn-menu:hover { background: #f1f5f9; color: var(--primary); }
     
     .dropdown-menu {
         display: none; position: absolute; right: 0; top: 110%; width: 210px;
-        background: white; border: 1px solid var(--border-color); border-radius: 10px;
-        box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); z-index: 100; padding: 6px;
+        background: var(--white); border: 1px solid var(--border-color); border-radius: 10px;
+        box-shadow: var(--shadow-md); z-index: 100; padding: 6px;
     }
     .dropdown-menu.show { display: block; }
 
@@ -74,20 +115,24 @@ $data_aspirasi = $m_aspirasi->tampil_data();
         font-size: 13px; font-weight: 600; color: #4b5563; text-decoration: none;
         border-radius: 8px; cursor: pointer; border: none; width: 100%; background: none; text-align: left;
     }
-    .dropdown-item:hover { background: #f8fafc; color: var(--primary); }
+    .dropdown-item:hover { background: var(--bg-light); color: var(--primary); }
     .dropdown-item.text-danger:hover { background: #fff1f2; color: #e11d48; }
 
-    .aspirasi-title { font-size: 1rem; font-weight: 800; color: var(--text-main); margin: 1rem 1rem 0.2rem 1rem; }
-    .aspirasi-text { font-size: 0.85rem; color: var(--text-muted); margin: 0 1rem 1rem 1rem; line-height: 1.5; }
-
-    /* Perbaikan Style Foto Aspirasi ADMIN - Dikecilkan */
-    .aspirasi-foto-container { margin: 0 1rem 1rem 1rem; }
-    .aspirasi-img { max-width: 200px; /* Ukuran maksimal lebar dikecilkan */ border-radius: 8px; border: 1px solid #e5e7eb; cursor: zoom-in; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
-
-    .progress-section { background: #f8fafc; border-radius: 10px; padding: 1rem; margin: 0 1rem 1rem 1rem; border: 1px solid #f1f5f9; }
-    .progress-label { display: flex; align-items: center; gap: 8px; font-size: 0.7rem; font-weight: 800; color: #94a3b8; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
     
-    .progress-item { display: flex; gap: 14px; padding: 12px 0; border-bottom: 1px dotted #e2e8f0; align-items: flex-start; }
+    .progress-section { 
+        background: var(--bg-light); border-radius: 10px; padding: 1rem; 
+        margin: 0 1rem 1rem 1rem; border: 1px solid #f1f5f9; 
+    }
+    .progress-label { 
+        display: flex; align-items: center; gap: 8px; font-size: 0.7rem; 
+        font-weight: 800; color: #94a3b8; margin-bottom: 12px; 
+        text-transform: uppercase; letter-spacing: 0.5px; 
+    }
+    
+    .progress-item { 
+        display: flex; gap: 14px; padding: 12px 0; 
+        border-bottom: 1px dotted #e2e8f0; align-items: flex-start; 
+    }
     .progress-item:last-child { border-bottom: none; }
     
     .progress-thumb { 
@@ -96,12 +141,39 @@ $data_aspirasi = $m_aspirasi->tampil_data();
     }
     .progress-thumb:hover { transform: scale(1.05); }
 
-    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); z-index: 9999; backdrop-blur: 4px; }
-    .modal-box { background: #fff; width: 90%; max-width: 420px; margin: 50px auto; border-radius: 16px; overflow: hidden; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); }
+    .meta-info { font-size: 0.75rem; color: var(--text-muted); display: flex; gap: 12px; align-items: center; }
+    .meta-date { display: flex; align-items: center; gap: 4px; }
+    .meta-est { color: var(--primary); font-weight: 700; display: flex; align-items: center; gap: 4px; }
+
+    
+    .modal-overlay { 
+        display: none; position: fixed; inset: 0; 
+        background: rgba(15, 23, 42, 0.6); z-index: 9999; backdrop-filter: blur(4px); 
+    }
+    .modal-box { 
+        background: var(--white); width: 90%; max-width: 420px; 
+        margin: 50px auto; border-radius: 16px; overflow: hidden; 
+        box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); 
+    }
     .modal-header { padding: 1.2rem; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; }
     .modal-body { padding: 1.2rem; }
-    .form-input { width: 100%; padding: 0.7rem; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 0.9rem; margin-top: 6px; box-sizing: border-box; }
-    .form-label { display:block; font-size:0.75rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; }
+
+    
+    .form-group { margin-bottom: 1rem; }
+    .form-label { display: block; font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 6px; }
+    .form-input { 
+        width: 100%; padding: 0.75rem; border: 1px solid #e2e8f0; 
+        border-radius: 8px; font-size: 0.9rem; transition: 0.2s; box-sizing: border-box;
+    }
+    .form-input:focus { outline: none; border-color: var(--primary); ring: 2px var(--primary); }
+    
+    .btn-submit { 
+        width: 100%; background: var(--primary); color: var(--white); 
+        border: none; padding: 0.8rem; border-radius: 10px; 
+        font-weight: 700; cursor: pointer; transition: 0.2s;
+        box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+    }
+    .btn-submit:hover { background: var(--primary-hover); }
 </style>
 
 <div class="page-header" style="margin-bottom: 2rem;">

@@ -11,14 +11,13 @@ include_once '../../controllers/c_kategori.php';
 include '../layout/header.php';
 include '../layout/sidebar.php';
 
-// Ambil data hanya milik user yang sedang login
+
 $user_id = $_SESSION['data']['id'];
 $data_aspirasi = $aspirasi->tampil_data($user_id); 
 $kategori = $kategori->tampil_data(); 
 ?>
 
 <style>
-/* ================= CSS DASAR ================= */
 .table-aspirasi {
     width: 100%;
     border-collapse: collapse;
@@ -66,7 +65,6 @@ $kategori = $kategori->tampil_data();
     transform: scale(1.1);
 }
 
-/* ================= MODAL STYLING (FIXED SCROLL) ================= */
 .modal {
     display: none;
     position: fixed;
@@ -74,14 +72,14 @@ $kategori = $kategori->tampil_data();
     background: rgba(0,0,0,0.6);
     z-index: 9999;
     backdrop-filter: blur(2px);
-    overflow-y: auto; /* Memungkinkan scroll di seluruh layar modal */
+    overflow-y: auto; 
     padding: 20px 10px;
 }
 
 .modal-content {
     background: #fff;
     width: 95%;
-    max-width: 460px; /* Lebih ramping */
+    max-width: 460px; 
     margin: 10px auto; 
     padding: 20px;
     border-radius: 12px;
@@ -104,9 +102,9 @@ $kategori = $kategori->tampil_data();
     color: #94a3b8;
 }
 
-/* ================= FORM & BUTTONS ================= */
+
 .form-group {
-    margin-bottom: 12px; /* Jarak antar input diperkecil */
+    margin-bottom: 12px; 
 }
 
 .form-group label {
@@ -131,7 +129,7 @@ $kategori = $kategori->tampil_data();
 
 textarea {
     resize: vertical;
-    min-height: 70px; /* Tinggi textarea diperkecil agar modal tidak kepanjangan */
+    min-height: 70px; 
 }
 
 .btn-primary {
@@ -146,7 +144,7 @@ textarea {
 }
 
 .btn-submit {
-    background: #16a34a; /* Warna hijau untuk tambah */
+    background: #16a34a; 
     color: #fff;
     padding: 12px 20px;
     border: none;
@@ -157,7 +155,7 @@ textarea {
     margin-top: 10px;
 }
 
-/* Warna Biru untuk tombol Simpan Perubahan di Modal Edit */
+
 .btn-update {
     background: #2563eb; 
     color: #fff;

@@ -50,7 +50,6 @@ $data = $umpanbalik->tampil_data($userId);
     .judul-aspirasi { font-size: 18px; font-weight: 700; color: #111827; }
     .isi-aspirasi { font-size: 15px; color: #4b5563; line-height: 1.6; margin: 12px 0; }
 
-    /* CSS Foto Bukti */
     .user-foto-aspirasi { 
         max-width: 220px; 
         border-radius: 8px; 

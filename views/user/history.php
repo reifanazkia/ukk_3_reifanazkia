@@ -11,7 +11,7 @@ include '../layout/sidebar.php';
 $m_aspirasi = new aspirasi();
 $user_id = $_SESSION['data']['id'];
 
-// --- LOGIKA PAGINATION ---
+//  LOGIKA PAGINATION 
 $jumlahDataPerHalaman = 10;
 $totalData = $m_aspirasi->hitung_total_aspirasi($user_id); 
 $jumlahHalaman = ceil($totalData / $jumlahDataPerHalaman);

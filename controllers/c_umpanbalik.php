@@ -3,7 +3,6 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Hubungkan ke Model (Pastikan path ke models/m_umpanbalik.php benar)
 include_once __DIR__ . '/../models/m_umpanbalik.php';
 
 // Inisialisasi

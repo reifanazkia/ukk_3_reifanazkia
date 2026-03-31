@@ -12,7 +12,7 @@ class kategori
         $this->db = $koneksi->koneksi;
     }
 
-    // ================= TAMPIL DATA =================
+    // TAMPIL DATA
     public function tampil_data()
     {
         $conn = new koneksi();
@@ -27,7 +27,7 @@ class kategori
         return $hasil;
     }
 
-    // ================= TAMBAH =================
+    // TAMBAH
     function tambah_kategori($nama_kategori)
     {
         $query = mysqli_query(
@@ -42,7 +42,7 @@ class kategori
         }
     }
 
-    // ================= GET BY ID =================
+    // GET BY ID
     function getById($id)
     {
         $query = mysqli_query(
@@ -53,7 +53,7 @@ class kategori
         return mysqli_fetch_assoc($query);
     }
 
-    // ================= UPDATE =================
+    // UPDATE
     function ubah_kategori($id, $nama_kategori)
     {
         $query = mysqli_query(
@@ -68,7 +68,7 @@ class kategori
         }
     }
 
-    // ================= HAPUS =================
+    // HAPUS
     function hapus_kategori($id)
     {
         $query = mysqli_query(

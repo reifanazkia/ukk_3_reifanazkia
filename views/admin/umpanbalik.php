@@ -13,7 +13,7 @@ $data = $umpanbalik->tampil_data();
 ?>
 
 <style>
-    /* ================= CSS ASLI ANDA ================= */
+    
     .page-title { margin-bottom: 5px; color: #111827; font-weight: 700; }
     .page-subtitle { color: #6b7280; font-size: 14px; margin-bottom: 25px; }
     

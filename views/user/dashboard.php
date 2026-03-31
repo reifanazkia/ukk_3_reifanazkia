@@ -13,15 +13,15 @@ if (!isset($_SESSION['data']) || $_SESSION['data']['role'] !== 'user') {
     exit;
 }
 
-// 1. Hitung Total Aspirasi
+// Hitung Total Aspirasi
 $query_total = mysqli_query($conn, "SELECT COUNT(*) as total FROM aspirasi");
 $data_total = mysqli_fetch_assoc($query_total);
 
-// 2. Hitung Proses (Status 'diproses')
+// Hitung Proses (Status 'diproses')
 $query_proses = mysqli_query($conn, "SELECT COUNT(*) as total FROM aspirasi WHERE status = 'diproses'");
 $data_proses = mysqli_fetch_assoc($query_proses);
 
-// 3. Hitung Selesai (Status 'selesai')
+// Hitung Selesai (Status 'selesai')
 $query_selesai = mysqli_query($conn, "SELECT COUNT(*) as total FROM aspirasi WHERE status = 'selesai'");
 $data_selesai = mysqli_fetch_assoc($query_selesai);
 ?>
