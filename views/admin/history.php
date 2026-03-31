@@ -165,9 +165,7 @@ $data_history = $m_aspirasi->tampil_semua_history_paginated($awalData, $jumlahDa
     }
 </style>
 
-<div class="page-header">
-    <h2 class="page-title">Riwayat Seluruh Aspirasi (Admin)</h2>
-</div>
+<h2 class="page-title">History Seluruh Aspirasi</h2>
 
 <div class="container-cards">
     <?php if (empty($data_history)) : ?>

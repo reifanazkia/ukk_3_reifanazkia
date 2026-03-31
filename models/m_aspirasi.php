@@ -152,21 +152,37 @@ class aspirasi
         $this->alert_redirect($query, "Status berhasil diperbarui", "../views/admin/umpan_balik.php");
     }
 
-    public function hapus($id)
-    {
-        $conn = new koneksi();
-        $res = mysqli_query($conn->koneksi, "SELECT foto FROM aspirasi WHERE id = '$id'");
+   public function hapus($id)
+{
+    // 1. Inisialisasi koneksi
+    $obj_koneksi = new koneksi();
+    $conn = $obj_koneksi->koneksi;
+
+    // 2. Ambil nama file foto sebelum data di database dihapus
+    $sql_cek = "SELECT foto FROM aspirasi WHERE id = '$id'";
+    $res = mysqli_query($conn, $sql_cek);
+
+    // Cek apakah query SELECT berhasil dan datanya ada
+    if ($res && mysqli_num_rows($res) > 0) {
         $data = mysqli_fetch_object($res);
 
-        // Hapus file fisik di folder image
-        if ($data && $data->foto && file_exists("../../assets/image/" . $data->foto)) {
-            unlink("../../assets/image/" . $data->foto);
+        if (!empty($data->foto)) {
+            $path_foto = "../../assets/image/" . $data->foto;
+            if (file_exists($path_foto)) {
+                unlink($path_foto);
+            }
         }
-
-        mysqli_query($conn->koneksi, "DELETE FROM umpan_balik WHERE aspirasi_id = '$id'");
-        $query = mysqli_query($conn->koneksi, "DELETE FROM aspirasi WHERE id = '$id'");
-        $this->alert_redirect($query, "Data berhasil dihapus", "../views/user/aspirasi.php");
     }
+
+    // 4. Hapus data terkait di tabel umpan_balik (Child Table) agar tidak Error Foreign Key
+    mysqli_query($conn, "DELETE FROM umpan_balik WHERE aspirasi_id = '$id'");
+
+    // 5. Hapus data utama di tabel aspirasi
+    $query = mysqli_query($conn, "DELETE FROM aspirasi WHERE id = '$id'");
+
+    // 6. Redirect dengan alert
+   $this->alert_redirect($query, "Data berhasil dihapus", "/ukk_3_reifanazkia/views/user/aspirasi.php");
+}
 
     private function alert_redirect($query, $msg, $url)
     {
