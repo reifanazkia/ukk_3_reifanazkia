@@ -149,7 +149,7 @@ class aspirasi
         $conn = new koneksi();
         $sql  = "UPDATE aspirasi SET status = '$status' WHERE id = '$id'";
         $query = mysqli_query($conn->koneksi, $sql);
-        $this->alert_redirect($query, "Status berhasil diperbarui", "../views/admin/umpan_balik.php");
+        $this->alert_redirect($query, "Status berhasil diperbarui", "../views/admin/aspirasi.php");
     }
 
    public function hapus($id)

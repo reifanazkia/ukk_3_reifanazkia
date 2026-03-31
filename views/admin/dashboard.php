@@ -1,9 +1,6 @@
 <?php
 session_start();
 
-/* =============================
-   CEK LOGIN & ROLE ADMIN
-============================= */
 if (!isset($_SESSION['data']) || $_SESSION['data']['role'] !== 'admin') {
     header("Location: ../../index.php");
     exit;

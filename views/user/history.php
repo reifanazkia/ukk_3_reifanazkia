@@ -71,16 +71,6 @@ $data_history = $m_aspirasi->tampil_history_per_user_paginated($user_id, $awalDa
     }
 
     /* 4. Elements & Typography */
-    .user-info {
-        font-size: 0.75rem;
-        font-weight: 800;
-        color: var(--primary);
-        text-transform: uppercase;
-        letter-spacing: 0.025em;
-        margin-bottom: 0.5rem;
-        display: block;
-    }
-
     .aspirasi-text {
         font-size: 0.95rem;
         color: var(--text-muted);
@@ -92,31 +82,25 @@ $data_history = $m_aspirasi->tampil_history_per_user_paginated($user_id, $awalDa
         margin-bottom: 1.25rem;
     }
 
-    /* 5. Images */
+    /* 5. Images (DIPERBAIKI) */
     .history-img-container {
         margin-top: 1rem;
     }
 
-    .history-label {
-        display: block;
-        font-size: 10px;
-        font-weight: 800;
-        color: var(--text-muted);
-        text-transform: uppercase;
-        margin-bottom: 0.5rem;
-    }
-
-    .history-img-admin {
-        max-width: 220px;
+    .history-img {
+        max-width: 150px; /* Ukuran foto dikecilkan */
         height: auto;
         border-radius: 8px;
         border: 1px solid var(--border-color);
         cursor: zoom-in;
         transition: transform 0.2s ease-in-out;
+        display: block;
+        object-fit: cover;
     }
 
-    .history-img-admin:hover {
-        transform: scale(1.02);
+    .history-img:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
 
     /* 6. Badges */
@@ -153,16 +137,10 @@ $data_history = $m_aspirasi->tampil_history_per_user_paginated($user_id, $awalDa
         transition: all 0.2s;
     }
 
-    .pagination a:hover {
-        border-color: var(--primary);
-        color: var(--primary);
-    }
-
     .pagination a.active {
         background: var(--primary);
         color: var(--white);
         border-color: var(--primary);
-        box-shadow: 0 4px 6px -1px rgb(37 99 235 / 0.2);
     }
 </style>
 
@@ -181,13 +159,16 @@ $data_history = $m_aspirasi->tampil_history_per_user_paginated($user_id, $awalDa
                     <span style="font-weight: 800; color: var(--primary);">#<?= $row->id ?></span>
                 </div>
                 <div class="card-body">
-                    <h3 style="font-weight: 800; margin-bottom: 0.5rem;"><?= htmlspecialchars($row->judul) ?></h3>
+                    <h3 style="font-weight: 800; margin-bottom: 0.5rem; color: var(--text-main);"><?= htmlspecialchars($row->judul) ?></h3>
                     <p class="aspirasi-text"><?= nl2br(htmlspecialchars($row->pesan)) ?></p>
                     
                     <?php if (!empty($row->foto)) : ?>
-                        <div style="margin-top: 10px;">
+                        <div class="history-img-container">
                             <small style="display:block; font-size:10px; font-weight:800; color:#94a3b8; margin-bottom:5px; text-transform:uppercase;">Foto Bukti:</small>
-                            <img src="../../assets/image/<?= $row->foto ?>" class="history-img" onclick="window.open(this.src)" onerror="this.src='https://placehold.co/220x150?text=Foto+Tidak+Ditemukan'">
+                            <img src="../../assets/image/<?= $row->foto ?>" 
+                                 class="history-img" 
+                                 onclick="window.open(this.src)" 
+                                 onerror="this.src='https://placehold.co/150x100?text=No+Image'">
                         </div>
                     <?php endif; ?>
                 </div>

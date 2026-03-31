@@ -11,7 +11,7 @@ try {
 
     $aksi = $_GET['aksi'] ?? '';
 
-    // ================= FILTER =================
+    // FILTER
 
     if ($aksi == 'filter') {
 
@@ -28,7 +28,7 @@ try {
         );
     }
 
-    // ================= TAMBAH =================
+    // TAMBAH
 
     elseif ($aksi == 'tambah') {
 
@@ -62,7 +62,7 @@ try {
         );
     }
 
-    // ================= UPDATE =================
+    // UPDATE
 
     elseif ($aksi == 'update') {
 
@@ -101,7 +101,7 @@ try {
         );
     }
 
-    // ================= UPDATE STATUS =================
+    // UPDATE STATUS
 
     elseif ($aksi == 'update_status') {
 
@@ -111,7 +111,7 @@ try {
         $aspirasi->edit_status_admin($id, $status);
     }
 
-    // ================= HAPUS =================
+    // HAPUS
 
     elseif ($aksi == 'hapus') {
 

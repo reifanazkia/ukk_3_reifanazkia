@@ -18,7 +18,7 @@ $kategori = $kategori->tampil_data();
 ?>
 
 <style>
-/* ================= CSS LENGKAP ================= */
+/* ================= CSS DASAR ================= */
 .table-aspirasi {
     width: 100%;
     border-collapse: collapse;
@@ -66,7 +66,7 @@ $kategori = $kategori->tampil_data();
     transform: scale(1.1);
 }
 
-/* ================= MODAL STYLING ================= */
+/* ================= MODAL STYLING (FIXED SCROLL) ================= */
 .modal {
     display: none;
     position: fixed;
@@ -74,14 +74,16 @@ $kategori = $kategori->tampil_data();
     background: rgba(0,0,0,0.6);
     z-index: 9999;
     backdrop-filter: blur(2px);
+    overflow-y: auto; /* Memungkinkan scroll di seluruh layar modal */
+    padding: 20px 10px;
 }
 
 .modal-content {
     background: #fff;
-    width: 90%;
-    max-width: 500px;
-    margin: 40px auto;
-    padding: 25px;
+    width: 95%;
+    max-width: 460px; /* Lebih ramping */
+    margin: 10px auto; 
+    padding: 20px;
     border-radius: 12px;
     position: relative;
     box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2);
@@ -104,22 +106,22 @@ $kategori = $kategori->tampil_data();
 
 /* ================= FORM & BUTTONS ================= */
 .form-group {
-    margin-bottom: 15px;
+    margin-bottom: 12px; /* Jarak antar input diperkecil */
 }
 
 .form-group label {
     display: block;
-    margin-bottom: 5px;
+    margin-bottom: 4px;
     font-weight: 600;
     color: #1e293b;
-    font-size: 14px;
+    font-size: 13px;
 }
 
 .form-group input,
 .form-group textarea,
 .form-group select {
     width: 100%;
-    padding: 10px;
+    padding: 8px 12px;
     border: 1px solid #cbd5e1;
     border-radius: 6px;
     font-family: inherit;
@@ -129,7 +131,7 @@ $kategori = $kategori->tampil_data();
 
 textarea {
     resize: vertical;
-    min-height: 80px;
+    min-height: 70px; /* Tinggi textarea diperkecil agar modal tidak kepanjangan */
 }
 
 .btn-primary {
@@ -143,12 +145,8 @@ textarea {
     transition: 0.2s;
 }
 
-.btn-primary:hover {
-    background: #1d4ed8;
-}
-
 .btn-submit {
-    background: #16a34a;
+    background: #16a34a; /* Warna hijau untuk tambah */
     color: #fff;
     padding: 12px 20px;
     border: none;
@@ -157,6 +155,24 @@ textarea {
     cursor: pointer;
     width: 100%;
     margin-top: 10px;
+}
+
+/* Warna Biru untuk tombol Simpan Perubahan di Modal Edit */
+.btn-update {
+    background: #2563eb; 
+    color: #fff;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 10px;
+    transition: 0.2s;
+}
+
+.btn-update:hover {
+    background: #1d4ed8;
 }
 
 .btn-edit {
@@ -168,10 +184,6 @@ textarea {
     font-size: 12px;
     font-weight: 600;
     display: inline-block;
-}
-
-.btn-edit:hover {
-    background: #f59e0b;
 }
 
 .btn-hapus {
@@ -325,7 +337,7 @@ textarea {
                 <label>Ganti Foto (Kosongkan jika tidak diubah)</label>
                 <input type="file" name="foto" accept="image/*">
             </div>
-            <button type="submit" class="btn-submit" style="background: #fbbf24; color: #000;">Simpan Perubahan</button>
+            <button type="submit" class="btn-update">Simpan Perubahan</button>
         </form>
     </div>
 </div>
@@ -351,7 +363,6 @@ function closeEdit() {
     document.getElementById('modalEdit').style.display = 'none'; 
 }
 
-// Menutup modal saat klik di luar kotak modal
 window.onclick = function(event) {
     if (event.target == document.getElementById('modalTambah')) closeTambah();
     if (event.target == document.getElementById('modalEdit')) closeEdit();

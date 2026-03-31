@@ -45,42 +45,46 @@ body {
 }
 
 .sidebar h3 {
-  margin-bottom: 25px;
+  margin-bottom: 30px; /* Jarak bawah judul sidebar diperbesar */
+  padding-left: 14px;
   font-size: 18px;
   color: #333;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .sidebar a.menu-item {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 12px 14px;
-  margin-bottom: 12px;
+  padding: 14px 16px; /* Padding dipertebal agar menu lebih tinggi */
+  margin-bottom: 15px; /* JARAK ANTAR MENU (DIPERBESAR) */
   text-decoration: none;
   color: #555;
-  border-radius: 8px;
+  border-radius: 10px;
   transition: 0.3s;
   font-size: 14px;
 }
 
 .menu-icon {
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 20px;
   stroke: currentColor;
   flex-shrink: 0;
   transition: 0.3s;
 }
 
 .sidebar a.menu-item:hover {
-  background: #f1f5f9;
-  color: #333;
-  transform: translateX(2px);
+  background: #f8fafc;
+  color: #2563eb;
+  transform: translateX(5px);
 }
 
 .sidebar a.menu-item.active {
-  background: #e3f0ff;
-  color: #2c3e50;
-  font-weight: 500;
+  background: #eff6ff;
+  color: #2563eb;
+  font-weight: 600;
+  border-left: 4px solid #2563eb;
 }
 
 .main {
@@ -122,20 +126,22 @@ body {
 .role-text {
   font-size: 14px;
   color: #555;
+  font-weight: 600;
 }
 
 .logout-btn {
   text-decoration: none;
-  padding: 6px 14px;
-  background: #e74c3c;
+  padding: 8px 18px;
+  background: #ef4444;
   color: #fff;
-  border-radius: 6px;
-  font-size: 14px;
+  border-radius: 8px;
+  font-size: 13px;
   transition: 0.3s;
 }
 
 .logout-btn:hover {
-  background: #c0392b;
+  background: #dc2626;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
 }
 
 .container {
@@ -158,42 +164,42 @@ function toggleSidebar() {
   <h3>Admin</h3>
 
   <a href="dashboard.php" class="menu-item <?= $current=='dashboard.php'?'active':'' ?>">
-    <svg class="menu-icon" fill="none" stroke-width="2" viewBox="0 0 24 24">
+    <svg class="menu-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
       <path d="M3 12l9-9 9 9M4 10v10h6v-6h4v6h6V10"/>
     </svg>
     <span>Home</span>
   </a>
 
   <a href="../admin/aspirasi.php" class="menu-item <?= $current=='aspirasi.php'?'active':'' ?>">
-    <svg class="menu-icon" fill="none" stroke-width="2" viewBox="0 0 24 24">
+    <svg class="menu-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
       <path d="M8 10h8M8 14h6M4 6h16v12H4z"/>
     </svg>
     <span>Aspirasi</span>
   </a>
 
   <a href="../admin/umpanbalik.php" class="menu-item <?= $current=='umpanbalik.php'?'active':'' ?>">
-    <svg class="menu-icon" fill="none" stroke-width="2" viewBox="0 0 24 24">
+    <svg class="menu-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
       <path d="M21 15a4 4 0 01-4 4H7l-4 4V5a4 4 0 014-4h10a4 4 0 014 4z"/>
     </svg>
     <span>Umpan Balik</span>
   </a>
 
   <a href="kategori.php" class="menu-item <?= $current=='kategori.php'?'active':'' ?>">
-    <svg class="menu-icon" fill="none" stroke-width="2" viewBox="0 0 24 24">
+    <svg class="menu-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
       <path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/>
     </svg>
     <span>Kategori</span>
   </a>
 
-  <a href="../admin/progress_perbaikan.php" class="menu-item <?= $current=='progres.php'?'active':'' ?>">
-    <svg class="menu-icon" fill="none" stroke-width="2" viewBox="0 0 24 24">
+  <a href="../admin/progress_perbaikan.php" class="menu-item <?= $current=='progress_perbaikan.php'?'active':'' ?>">
+    <svg class="menu-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
       <path d="M4 12h16M4 6h16M4 18h16"/>
     </svg>
     <span>Progres Perbaikan</span>
   </a>
 
   <a href="../admin/history.php" class="menu-item <?= $current=='history.php'?'active':'' ?>">
-    <svg class="menu-icon" fill="none" stroke-width="2" viewBox="0 0 24 24">
+    <svg class="menu-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
       <path d="M12 8v4l3 3M12 2a10 10 0 100 20 10 10 0 000-20z"/>
     </svg>
     <span>History</span>
@@ -204,35 +210,35 @@ function toggleSidebar() {
   <h3>User</h3>
 
   <a href="dashboard.php" class="menu-item <?= $current=='dashboard.php'?'active':'' ?>">
-    <svg class="menu-icon" fill="none" stroke-width="2" viewBox="0 0 24 24">
+    <svg class="menu-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
       <path d="M3 12l9-9 9 9M4 10v10h6v-6h4v6h6V10"/>
     </svg>
     <span>Home</span>
   </a>
 
   <a href="../user/aspirasi.php" class="menu-item <?= $current=='aspirasi.php'?'active':'' ?>">
-    <svg class="menu-icon" fill="none" stroke-width="2" viewBox="0 0 24 24">
+    <svg class="menu-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
       <path d="M8 10h8M8 14h6M4 6h16v12H4z"/>
     </svg>
     <span>Aspirasi</span>
   </a>
 
   <a href="../user/umpanbalik.php" class="menu-item <?= $current=='umpanbalik.php'?'active':'' ?>">
-    <svg class="menu-icon" fill="none" stroke-width="2" viewBox="0 0 24 24">
+    <svg class="menu-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
       <path d="M21 15a4 4 0 01-4 4H7l-4 4V5a4 4 0 014-4h10a4 4 0 014 4z"/>
     </svg>
     <span>Umpan Balik</span>
   </a>
 
-  <a href="../user/progress_perbaikan.php" class="menu-item <?= $current=='progres.php'?'active':'' ?>">
-    <svg class="menu-icon" fill="none" stroke-width="2" viewBox="0 0 24 24">
+  <a href="../user/progress_perbaikan.php" class="menu-item <?= $current=='progress_perbaikan.php'?'active':'' ?>">
+    <svg class="menu-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
       <path d="M4 12h16M4 6h16M4 18h16"/>
     </svg>
     <span>Progres Perbaikan</span>
   </a>
 
   <a href="../user/history.php" class="menu-item <?= $current=='history.php'?'active':'' ?>">
-    <svg class="menu-icon" fill="none" stroke-width="2" viewBox="0 0 24 24">
+    <svg class="menu-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
       <path d="M12 8v4l3 3M12 2a10 10 0 100 20 10 10 0 000-20z"/>
     </svg>
     <span>History</span>
