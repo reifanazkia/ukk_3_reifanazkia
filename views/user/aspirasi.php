@@ -1,6 +1,7 @@
 <?php
 session_start();
 
+// Proteksi halaman: Hanya role 'user' yang boleh masuk
 if (!isset($_SESSION['data']) || $_SESSION['data']['role'] !== 'user') {
     header("Location: ../index.php");
     exit;
@@ -10,7 +11,6 @@ include_once '../../controllers/c_aspirasi.php';
 include_once '../../controllers/c_kategori.php';
 include '../layout/header.php';
 include '../layout/sidebar.php';
-
 
 $user_id = $_SESSION['data']['id'];
 $data_aspirasi = $aspirasi->tampil_data($user_id); 
@@ -47,13 +47,10 @@ $kategori = $kategori->tampil_data();
     vertical-align: middle;
 }
 
-.table-aspirasi tr:hover {
-    background-color: #f9fafb;
-}
+.table-aspirasi tr:hover { background-color: #f9fafb; }
 
 .img-thumbnail-aspirasi {
-    width: 50px;
-    height: 50px;
+    width: 50px; height: 50px;
     object-fit: cover;
     border-radius: 6px;
     cursor: pointer;
@@ -61,9 +58,7 @@ $kategori = $kategori->tampil_data();
     transition: 0.3s;
 }
 
-.img-thumbnail-aspirasi:hover {
-    transform: scale(1.1);
-}
+.img-thumbnail-aspirasi:hover { transform: scale(1.1); }
 
 .modal {
     display: none;
@@ -95,17 +90,13 @@ $kategori = $kategori->tampil_data();
 
 .close {
     position: absolute;
-    top: 15px;
-    right: 20px;
+    top: 15px; right: 20px;
     cursor: pointer;
     font-size: 24px;
     color: #94a3b8;
 }
 
-
-.form-group {
-    margin-bottom: 12px; 
-}
+.form-group { margin-bottom: 12px; }
 
 .form-group label {
     display: block;
@@ -115,9 +106,7 @@ $kategori = $kategori->tampil_data();
     font-size: 13px;
 }
 
-.form-group input,
-.form-group textarea,
-.form-group select {
+.form-group input, .form-group textarea, .form-group select {
     width: 100%;
     padding: 8px 12px;
     border: 1px solid #cbd5e1;
@@ -127,9 +116,12 @@ $kategori = $kategori->tampil_data();
     box-sizing: border-box;
 }
 
-textarea {
-    resize: vertical;
-    min-height: 70px; 
+/* Style khusus untuk input readonly */
+.input-disabled {
+    background-color: #f1f5f9;
+    color: #64748b;
+    cursor: not-allowed;
+    border: 1px solid #e2e8f0;
 }
 
 .btn-primary {
@@ -140,7 +132,6 @@ textarea {
     border-radius: 6px;
     font-weight: 600;
     cursor: pointer;
-    transition: 0.2s;
 }
 
 .btn-submit {
@@ -155,7 +146,6 @@ textarea {
     margin-top: 10px;
 }
 
-
 .btn-update {
     background: #2563eb; 
     color: #fff;
@@ -166,11 +156,6 @@ textarea {
     cursor: pointer;
     width: 100%;
     margin-top: 10px;
-    transition: 0.2s;
-}
-
-.btn-update:hover {
-    background: #1d4ed8;
 }
 
 .btn-edit {
@@ -181,7 +166,6 @@ textarea {
     text-decoration: none;
     font-size: 12px;
     font-weight: 600;
-    display: inline-block;
 }
 
 .btn-hapus {
@@ -192,7 +176,6 @@ textarea {
     text-decoration: none;
     font-size: 12px;
     font-weight: 600;
-    display: inline-block;
 }
 </style>
 
@@ -238,8 +221,6 @@ textarea {
                 <td align="center">
                     <a href="javascript:void(0)" onclick="openEdit(
                         '<?= $row->id ?>',
-                        '<?= addslashes($row->nama_lengkap) ?>',
-                        '<?= addslashes($row->kelas) ?>',
                         '<?= $row->id_categori ?>',
                         '<?= addslashes($row->judul) ?>',
                         '<?= addslashes($row->pesan) ?>',
@@ -267,11 +248,11 @@ textarea {
         <form action="../../controllers/c_aspirasi.php?aksi=tambah" method="post" enctype="multipart/form-data">
             <div class="form-group">
                 <label>Nama Lengkap</label>
-                <input type="text" name="nama_lengkap" placeholder="Masukkan nama" required>
+                <input type="text" class="input-disabled" value="<?= $_SESSION['data']['nama_lengkap'] ?>" readonly>
             </div>
             <div class="form-group">
                 <label>Kelas</label>
-                <input type="text" name="kelas" placeholder="Contoh: XII RPL 1" required>
+                <input type="text" class="input-disabled" value="<?= $_SESSION['data']['kelas'] ?>" readonly>
             </div>
             <div class="form-group">
                 <label>Kategori</label>
@@ -288,7 +269,7 @@ textarea {
             </div>
             <div class="form-group">
                 <label>Pesan / Detail</label>
-                <textarea name="pesan" placeholder="Jelaskan aspirasi Anda secara lengkap..." required></textarea>
+                <textarea name="pesan" placeholder="Jelaskan aspirasi Anda..." required></textarea>
             </div>
             <div class="form-group">
                 <label>Foto Bukti (Opsional)</label>
@@ -309,11 +290,11 @@ textarea {
             
             <div class="form-group">
                 <label>Nama Lengkap</label>
-                <input type="text" name="nama_lengkap" id="edit_nama" required>
+                <input type="text" class="input-disabled" value="<?= $_SESSION['data']['nama_lengkap'] ?>" readonly>
             </div>
             <div class="form-group">
                 <label>Kelas</label>
-                <input type="text" name="kelas" id="edit_kelas" required>
+                <input type="text" class="input-disabled" value="<?= $_SESSION['data']['kelas'] ?>" readonly>
             </div>
             <div class="form-group">
                 <label>Kategori</label>
@@ -347,11 +328,9 @@ function openTambah() {
 function closeTambah() { 
     document.getElementById('modalTambah').style.display = 'none'; 
 }
-function openEdit(id, nama, kelas, kategori, judul, pesan, foto) {
+function openEdit(id, kategori, judul, pesan, foto) {
     document.getElementById('modalEdit').style.display = 'block';
     document.getElementById('edit_id').value = id;
-    document.getElementById('edit_nama').value = nama;
-    document.getElementById('edit_kelas').value = kelas;
     document.getElementById('edit_kategori').value = kategori;
     document.getElementById('edit_judul').value = judul;
     document.getElementById('edit_pesan').value = pesan;
@@ -362,8 +341,10 @@ function closeEdit() {
 }
 
 window.onclick = function(event) {
-    if (event.target == document.getElementById('modalTambah')) closeTambah();
-    if (event.target == document.getElementById('modalEdit')) closeEdit();
+    if (event.target.className == 'modal') {
+        closeTambah();
+        closeEdit();
+    }
 }
 </script>
 

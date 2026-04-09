@@ -8,13 +8,10 @@ include_once __DIR__ . '/../models/m_aspirasi.php';
 $aspirasi = new aspirasi();
 
 try {
-
     $aksi = $_GET['aksi'] ?? '';
 
-    // FILTER
-
+    // --- FILTER ---
     if ($aksi == 'filter') {
-
         $tanggal  = $_GET['tanggal'] ?? null;
         $bulan    = $_GET['bulan'] ?? null;
         $kategori = $_GET['kategori'] ?? null;
@@ -28,23 +25,21 @@ try {
         );
     }
 
-    // TAMBAH
-
+    // --- TAMBAH ---
     elseif ($aksi == 'tambah') {
-
+        // Mengambil data identitas dari Session
         $user_id      = $_SESSION['data']['id'];
-        $nama_lengkap = $_POST['nama_lengkap'];
-        $kelas        = $_POST['kelas'];
+        $nama_lengkap = $_SESSION['data']['nama_lengkap']; 
+        $kelas        = $_SESSION['data']['kelas'];
+        
+        // Mengambil data konten dari Form
         $id_categori  = $_POST['id_categori'];
         $judul        = $_POST['judul'];
         $pesan        = $_POST['pesan'];
 
         $foto = null;
-
         if (!empty($_FILES['foto']['name'])) {
-
             $foto = time() . "_" . $_FILES['foto']['name'];
-
             move_uploaded_file(
                 $_FILES['foto']['tmp_name'],
                 "../assets/image/" . $foto
@@ -60,15 +55,20 @@ try {
             $pesan,
             $foto
         );
+
+        // Redirect setelah berhasil
+        header("Location: ../views/user/aspirasi.php");
+        exit;
     }
 
-    // UPDATE
-
+    // --- UPDATE ---
     elseif ($aksi == 'update') {
-
-        $id           = $_POST['id'];
-        $nama_lengkap = $_POST['nama_lengkap'];
-        $kelas        = $_POST['kelas'];
+        $id = $_POST['id'];
+        
+        // Identitas tetap ditarik dari Session agar tidak bisa diubah lewat inspect element
+        $nama_lengkap = $_SESSION['data']['nama_lengkap']; 
+        $kelas        = $_SESSION['data']['kelas'];
+        
         $id_categori  = $_POST['id_categori'];
         $judul        = $_POST['judul'];
         $pesan        = $_POST['pesan'];
@@ -77,13 +77,12 @@ try {
         $foto = $foto_lama;
 
         if (!empty($_FILES['foto']['name'])) {
-
+            // Hapus file fisik foto lama jika user mengupload foto baru
             if ($foto_lama && file_exists("../assets/image/" . $foto_lama)) {
                 unlink("../assets/image/" . $foto_lama);
             }
 
             $foto = time() . "_" . $_FILES['foto']['name'];
-
             move_uploaded_file(
                 $_FILES['foto']['tmp_name'],
                 "../assets/image/" . $foto
@@ -99,29 +98,36 @@ try {
             $pesan,
             $foto
         );
+
+        // Redirect setelah berhasil
+        header("Location: ../views/user/aspirasi.php");
+        exit;
     }
 
-    // UPDATE STATUS
-
+    // --- UPDATE STATUS (Untuk Admin) ---
     elseif ($aksi == 'update_status') {
-
         $id     = $_POST['id'];
         $status = $_POST['status'];
 
         $aspirasi->edit_status_admin($id, $status);
+
+        // Redirect kembali ke halaman pengaduan admin
+        header("Location: ../views/admin/pengaduan.php");
+        exit;
     }
 
-    // HAPUS
-
+    // --- HAPUS ---
     elseif ($aksi == 'hapus') {
-
         $id = $_GET['id'];
 
         $aspirasi->hapus($id);
+
+        // Kembali ke halaman sebelumnya
+        header("Location: " . $_SERVER['HTTP_REFERER']);
+        exit;
     }
 
 } catch (Exception $e) {
-
     echo "Error: " . $e->getMessage();
 }
 ?>
