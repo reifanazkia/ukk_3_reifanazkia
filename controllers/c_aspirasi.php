@@ -112,9 +112,9 @@ try {
         $aspirasi->edit_status_admin($id, $status);
 
         // Redirect kembali ke halaman pengaduan admin
-        header("Location: ../views/admin/pengaduan.php");
+        header("Location: ../views/admin/aspirasi.php");
         exit;
-    }
+    }   
 
     // --- HAPUS ---
     elseif ($aksi == 'hapus') {

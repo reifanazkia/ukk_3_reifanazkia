@@ -1,7 +1,7 @@
 https://reifan-azkia-ukk.kesug.com
 
-role user  : username: user
-	     password: user
+role user  : username: reifanazkia
+	     	 password: user
 
 role admin : username:admin
-	     password:admin	
+	         password:admin	

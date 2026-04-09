@@ -1,4 +1,7 @@
 <?php
+
+date_default_timezone_set('Asia/Jakarta');
+
 session_start();
 if (!isset($_SESSION['data']) || $_SESSION['data']['role'] !== 'admin') {
     header("Location: ../index.php");
