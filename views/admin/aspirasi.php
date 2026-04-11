@@ -278,7 +278,7 @@ if (!empty($f_tgl) || !empty($f_bln) || !empty($f_kat) || !empty($f_nama)) {
         </div>
         <div class="filter-group" style="flex-direction: row; gap: 10px;">
             <button type="submit" class="btn-filter">Cari Data</button>
-            <a href="index.php" class="btn-reset">Reset</a>
+            <a href="aspirasi.php" class="btn-reset">Reset</a>
         </div>
     </div>
 </form>

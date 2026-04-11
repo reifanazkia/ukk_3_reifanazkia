@@ -1,4 +1,4 @@
-https://reifan-azkia-ukk.kesug.com
+https://reifanazkia-ukk.kesug.com
 
 role user  : username: reifanazkia
 	     	 password: user
